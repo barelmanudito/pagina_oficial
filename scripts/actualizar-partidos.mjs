@@ -84,18 +84,47 @@ function teamName(competitor) {
     || "Rival por confirmar";
 }
 
-const response = await fetch(SOURCE_URL, {
-  headers: { Accept: "application/json", "User-Agent": "Bar-El-Manudito-Calendar/1.0" },
-});
-if (!response.ok) throw new Error(`La fuente deportiva respondió ${response.status}`);
-const payload = await response.json();
-if (!Array.isArray(payload.events)) throw new Error("La fuente no devolvió una lista de partidos");
+const months = monthsBetween(rangeStart, rangeEnd);
+
+const allEvents = [];
+
+for (const month of months) {
+  const url = `${BASE_URL}?dates=${month}&limit=500`;
+
+  console.log(`Consultando ESPN: ${month}`);
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "Bar-El-Manudito-Calendar/1.0"
+    },
+  });
+
+  if (!response.ok) {
+    console.warn(
+      `ESPN respondió ${response.status} para ${month}. Se omite ese mes.`
+    );
+    continue;
+  }
+
+  const payload = await response.json();
+
+  if (Array.isArray(payload.events)) {
+    allEvents.push(...payload.events);
+  }
+}
 
 const today = new Date();
 today.setUTCHours(0, 0, 0, 0);
-const scheduled = payload.events.filter((event) => {
+const scheduled = allEvents.filter((event) => {
   const date = new Date(event.date);
-  return Number.isFinite(date.getTime()) && date >= today && !event.status?.type?.completed;
+
+  return (
+    Number.isFinite(date.getTime()) &&
+    date >= rangeStart &&
+    date <= rangeEnd &&
+    !event.status?.type?.completed
+  );
 });
 if (!scheduled.length) throw new Error("La fuente no devolvió partidos futuros; el CSV se conserva sin cambios");
 
