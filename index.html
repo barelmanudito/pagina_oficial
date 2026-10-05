@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <meta
+      name="description"
+      content="Bar El Manudito: fútbol, sabor y pasión rojinegra en Alajuela, Costa Rica."
+    />
+    <title>Bar El Manudito | Pasión rojinegra</title>
+    <link rel="icon" href="assets/icono.webp" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="menu-photos.js" defer></script>
+    <script src="menu-glass.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <canvas id="confetti" aria-hidden="true"></canvas>
+
+    <div class="site-shell">
+      <header class="topbar" id="inicio">
+        <a class="brand" href="#inicio" aria-label="Bar El Manudito, inicio">
+          <img src="assets/icono.webp" alt="" width="42" height="48" />
+          <span>
+            <strong>EL MANUDITO</strong>
+            <small>BAR DEPORTIVO</small>
+          </span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Abrir menú de navegación"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+          <a href="#menu">Menú</a>
+          <a href="#eventos">Eventos</a>
+          <a href="#historia">Historia</a>
+          <a href="#galeria">Galería</a>
+        </nav>
+      </header>
+
+      <main id="contenido">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span>ALAJUELA, COSTA RICA</span> PASIÓN ROJINEGRA</p>
+            <h1 id="hero-title"><span>BAR EL</span> MANUDITO</h1>
+            <p class="hero-lead">
+              Un punto de encuentro para vivir el fútbol, compartir con amigos
+              y celebrar cada jugada con sabor rojinegro.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#menu">Explorar el menú</a>
+              <a class="button button-ghost" href="#eventos">Ver eventos</a>
+            </div>
+            <ul class="hero-notes" aria-label="Lo que nos mueve">
+              <li>Fútbol</li>
+              <li>Amigos</li>
+              <li>Tradición</li>
+            </ul>
+          </div>
+
+          <div class="hero-emblem" aria-label="Identidad rojinegra de Bar El Manudito">
+            <div class="scoreboard-top">
+              <span>CASA</span>
+              <strong>90'</strong>
+              <span>AFICIÓN</span>
+            </div>
+            <div class="crest-stage">
+              <span class="crest-ring" aria-hidden="true"></span>
+              <img
+                src="assets/Leon.webp"
+                alt="León rojinegro de Bar El Manudito"
+                width="250"
+                height="282"
+                onerror="this.onerror=null;this.src='assets/icono.webp'"
+              />
+            </div>
+            <p>Aquí se celebra cada jugada.</p>
+          </div>
+        </section>
+
+        <div class="match-ticker" aria-label="Mensaje del bar">
+          <div>
+            <span>ORGULLO DE ALAJUELA</span>
+            <i aria-hidden="true">★</i>
+            <span>UN SOLO EQUIPO</span>
+            <i aria-hidden="true">★</i>
+            <span>UNA MISMA PASIÓN</span>
+            <i aria-hidden="true">★</i>
+            <span>ORGULLO DE ALAJUELA</span>
+          </div>
+        </div>
+
+        <div class="ball-track" aria-hidden="true">
+          <div class="soccer"></div>
+        </div>
+
+        <section class="section menu-section" id="menu" aria-labelledby="menu-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">LA ALINEACIÓN DE LA CASA</p>
+              <h2 id="menu-title">Menú interactivo</h2>
+            </div>
+            <p>
+              Elegí una categoría y armá tu selección. Podés copiarla para
+              compartirla con tu mesa.
+            </p>
+          </div>
+
+          <a class="menu-qr-link" href="menu.html" aria-label="Abrir la versión del menú diseñada para código QR">
+            <span>MENÚ PARA QR</span>
+            Abrir solo la carta <span aria-hidden="true">→</span>
+          </a>
+
+          <div class="menu-toolbar">
+            <div class="menu-tabs" role="group" aria-label="Filtrar el menú">
+              <button class="menu-tab is-active" type="button" data-category="todos">Todo</button>
+              <button class="menu-tab" type="button" data-category="bocas">Bocas</button>
+              <button class="menu-tab" type="button" data-category="fuertes">Platos fuertes</button>
+              <button class="menu-tab" type="button" data-category="especialidades">Especialidades</button>
+              <button class="menu-tab" type="button" data-category="cervezas">Cervezas</button>
+              <button class="menu-tab" type="button" data-category="cocteles">Cócteles</button>
+              <button class="menu-tab" type="button" data-category="sin-alcohol">Refrescos</button>
+              <button class="menu-tab" type="button" data-category="combos">Combos</button>
+            </div>
+            <button class="selection-button" id="open-order" type="button" aria-haspopup="dialog">
+              Mi selección <span id="selection-count">0</span>
+            </button>
+          </div>
+
+          <div class="menu-grid" id="menu-grid" aria-live="polite"></div>
+          <noscript><p class="noscript">Activá JavaScript para consultar el menú interactivo.</p></noscript>
+        </section>
+
+        <section class="section events-section reveal" id="eventos" aria-labelledby="events-title">
+          <div class="section-heading section-heading-light">
+            <div>
+              <p class="eyebrow">AGENDA ROJINEGRA</p>
+              <h2 id="events-title">Cada fecha tiene su historia</h2>
+            </div>
+            <p>
+              Navegá por el calendario y seleccioná una actividad para ver sus detalles.
+            </p>
+          </div>
+
+          <div class="calendar-layout">
+            <div class="calendar-card">
+              <div class="calendar-controls">
+                <button id="prev-month" type="button" aria-label="Mes anterior">←</button>
+                <h3 id="calendar-title" aria-live="polite"></h3>
+                <button id="next-month" type="button" aria-label="Mes siguiente">→</button>
+              </div>
+              <div class="calendar-weekdays" aria-hidden="true">
+                <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span>
+                <span>Jue</span><span>Vie</span><span>Sáb</span>
+              </div>
+              <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+
+            <aside class="event-detail" id="event-detail" aria-live="polite">
+              <span class="event-tag" id="event-tag">AGENDA DEL BAR</span>
+              <p class="event-date" id="event-date">Seleccioná una fecha marcada</p>
+              <h3 id="event-name">Próximas actividades</h3>
+              <div class="event-description" id="event-description">
+                <p>Las fechas confirmadas aparecerán aquí.</p>
+              </div>
+              <div class="event-meta" id="event-meta">
+                <span>Calendario del Manudito</span>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section story-section reveal" id="historia" aria-labelledby="story-title">
+          <div class="story-number" aria-hidden="true">11</div>
+          <div class="story-copy">
+            <p class="eyebrow">NUESTRA HISTORIA</p>
+            <h2 id="story-title">Un bar hecho para la afición</h2>
+            <p class="story-intro">
+              En cada rincón del mundo, los <strong>bares futboleros</strong> son templos
+              donde la pasión se sirve en vaso frío y la historia se canta a coro.
+            </p>
+            <p>
+              Desde el <strong>Shenanigans en Liverpool</strong>, donde se respira el rojo de los Reds,
+              hasta <strong>La Taverna en Barcelona</strong>, hogar de noches azulgranas, estos espacios
+              son más que bares: son comunidades vivas. En Buenos Aires, <strong>El Banderín</strong>
+              late con cada gol argentino; en Milán, el <strong>442 Sports Pub</strong> une rivales
+              bajo un mismo techo.
+            </p>
+            <p>
+              En Costa Rica, el corazón late fuerte en <strong>El Manudito</strong>, en Alajuela.
+              Allí, la hinchada de <strong>Liga Deportiva Alajuelense</strong> convierte cada partido
+              en una fiesta rojinegra. Entre cánticos, banderas y bocas abiertas por el gol,
+              se mezclan los sabores locales: chifrijo, casados y cerveza. Es el lugar donde
+              la historia del León se escribe entre brindis y abrazos, donde la victoria
+              sabe a comunidad y la derrota, a esperanza compartida.
+            </p>
+            <p>
+              Como el <strong>1905 Restó</strong> de Boca Juniors o el <strong>Salón Corona</strong>
+              de CDMX, <em>El Manudito</em> encarna la esencia del fútbol: un espacio donde
+              se cruzan el deporte, la comida y la cultura popular.
+            </p>
+          </div>
+          <blockquote>
+            <span>“</span>
+            <p>En cada bar futbolero, el verdadero protagonista es la hinchada.</p>
+          </blockquote>
+        </section>
+
+        <section class="section gallery-section reveal" id="galeria" aria-labelledby="gallery-title">
+          <div class="gallery-copy">
+            <p class="eyebrow">DESDE LA GRADERÍA</p>
+            <h2 id="gallery-title">Momentos del Manudito</h2>
+            <p>
+              Muy pronto, este espacio reunirá fotografías del ambiente, la barra y las
+              noches de partido.
+            </p>
+          </div>
+          <div class="gallery-coming" role="img" aria-label="Próximamente, galería de Bar El Manudito">
+            <img src="assets/icono.webp" alt="" width="150" height="170" />
+            <div>
+              <span>PRÓXIMAMENTE</span>
+              <strong>La afición también sale en la foto.</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="section social-section reveal" id="redes" aria-labelledby="social-title">
+          <p class="eyebrow">LA CONVERSACIÓN SIGUE</p>
+          <h2 id="social-title">Seguinos en redes</h2>
+          <p>Enterate de las actividades y compartí tus momentos en El Manudito.</p>
+          <div class="social-grid">
+            <a class="social-link" href="https://www.facebook.com/BarManudito" target="_blank" rel="noopener noreferrer" aria-label="Abrir Facebook de Bar El Manudito en una pestaña nueva">
+              <span class="social-icon" aria-hidden="true">f</span>
+              <span class="social-label"><strong>Facebook</strong><small>Novedades del bar</small></span>
+              <span class="social-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="social-link" href="https://www.instagram.com/manudito_lda/" target="_blank" rel="noopener noreferrer" aria-label="Abrir Instagram de Bar El Manudito en una pestaña nueva">
+              <span class="social-icon" aria-hidden="true">◎</span>
+              <span class="social-label"><strong>Instagram</strong><small>@manudito_lda</small></span>
+              <span class="social-arrow" aria-hidden="true">↗</span>
+            </a>
+            <!-- Reemplazar este bloque por un enlace wa.me cuando se confirme el número oficial. -->
+            <div class="social-link social-link-pending" aria-label="WhatsApp del bar, número pendiente">
+              <span class="social-icon" aria-hidden="true">✆</span>
+              <span class="social-label"><strong>WhatsApp</strong><small>Contacto próximamente</small></span>
+            </div>
+          </div>
+
+          <div class="visit-grid">
+            <div class="visit-card">
+              <p class="eyebrow">HORARIO MANUDITO</p>
+              <h3>Te esperamos</h3>
+              <dl class="hours-list">
+                <div><dt>Martes, miércoles y jueves</dt><dd>2:00 p. m. – 12:00 a. m.</dd></div>
+                <div><dt>Viernes, sábado y domingo</dt><dd>1:00 p. m. – 12:00 a. m.</dd></div>
+              </dl>
+            </div>
+            <div class="visit-card">
+              <p class="eyebrow">CÓMO LLEGAR</p>
+              <h3>Abrí tu aplicación favorita</h3>
+              <div class="route-links">
+                <a class="route-link" href="https://maps.app.goo.gl/PDF4zaawj4nS2r1G7" target="_blank" rel="noopener noreferrer">
+                  <span aria-hidden="true">⌖</span><strong>Google Maps</strong><small>Abrir ubicación</small>
+                </a>
+                <a class="route-link" href="https://ul.waze.com/ul?place=ChIJ2-1aHt35oI8RP2tk1lli3F0&amp;ll=10.02077320%2C-84.20928180&amp;navigate=yes&amp;utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location" target="_blank" rel="noopener noreferrer">
+                  <span aria-hidden="true">➤</span><strong>Waze</strong><small>Iniciar recorrido</small>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-brand">
+          <img src="assets/icono.webp" alt="" width="48" height="54" />
+          <div><strong>BAR EL MANUDITO</strong><span>Alajuela, Costa Rica</span></div>
+        </div>
+        <p>Fútbol, sabor y pasión rojinegra.</p>
+        <p class="footer-note">
+          Venta de bebidas alcohólicas únicamente a mayores de edad.
+          <a
+            href="https://en.wikipedia.org/wiki/File:Soccer_ball.svg"
+            target="_blank"
+            rel="license noopener noreferrer"
+          >Balón: Wikimedia Commons, CC BY-SA 3.0.</a>
+        </p>
+        <span>© <span id="current-year"></span> Bar El Manudito</span>
+      </footer>
+    </div>
+
+    <button class="floating-selection" id="floating-order" type="button" aria-haspopup="dialog" hidden>
+      <span id="floating-count">0</span>
+      Ver mi selección
+    </button>
+
+    <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-title">
+      <div class="dialog-header">
+        <div>
+          <span>PREVIA DEL PEDIDO</span>
+          <h2 id="order-title">Mi selección</h2>
+        </div>
+        <button id="close-order" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div class="order-list" id="order-list"></div>
+      <div class="order-total">
+        <span>Total estimado</span>
+        <strong id="order-total">₡0</strong>
+      </div>
+      <button class="button button-primary dialog-action" id="copy-order" type="button">
+        Copiar selección
+      </button>
+      <p class="copy-status" id="copy-status" aria-live="polite"></p>
+    </dialog>
+  </body>
+</html>

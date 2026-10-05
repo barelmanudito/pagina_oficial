@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 122" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="foamFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".58" stop-color="#fffdf7"/>
+      <stop offset=".84" stop-color="#f7f0df"/>
+      <stop offset="1" stop-color="#ead8b7"/>
+    </linearGradient>
+    <clipPath id="foamOutline">
+      <path d="M7 68 C-2 59 4 34 20 27 C35 14 62 17 82 20 C96 22 106 30 122 27 C137 23 148 10 169 9 C188 6 205 16 215 27 C239 29 252 47 254 63 C256 70 249 79 242 79 L242 90 C242 101 234 106 225 99 C216 110 201 108 195 100 C184 109 169 110 163 101 C149 109 136 107 127 100 C112 108 98 105 89 98 C74 105 61 101 55 94 C42 100 30 94 27 86 C12 89 6 79 7 68 Z"/>
+    </clipPath>
+  </defs>
+  <path d="M7 68 C-2 59 4 34 20 27 C35 14 62 17 82 20 C96 22 106 30 122 27 C137 23 148 10 169 9 C188 6 205 16 215 27 C239 29 252 47 254 63 C256 70 249 79 242 79 L242 90 C242 101 234 106 225 99 C216 110 201 108 195 100 C184 109 169 110 163 101 C149 109 136 107 127 100 C112 108 98 105 89 98 C74 105 61 101 55 94 C42 100 30 94 27 86 C12 89 6 79 7 68 Z" fill="url(#foamFill)"/>
+  <g clip-path="url(#foamOutline)" fill="none" stroke="#d6cbb6" opacity=".23">
+    <circle cx="31" cy="42" r="4"/><circle cx="67" cy="35" r="2.5"/>
+    <circle cx="94" cy="58" r="5"/><circle cx="122" cy="45" r="3"/>
+    <circle cx="156" cy="29" r="4"/><circle cx="190" cy="49" r="3"/>
+    <circle cx="226" cy="61" r="5"/><circle cx="206" cy="80" r="2.5"/>
+    <circle cx="66" cy="75" r="3"/><circle cx="137" cy="74" r="2"/>
+  </g>
+</svg>

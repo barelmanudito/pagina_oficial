@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <meta name="description" content="Carta digital de Bar El Manudito en Alajuela, Costa Rica." />
+    <title>Menú | Bar El Manudito</title>
+    <link rel="icon" href="assets/escudo-lda.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="menu-photos.js" defer></script>
+    <script src="menu-glass.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body class="menu-only-page">
+    <a class="skip-link" href="#menu">Ir al menú</a>
+    <canvas id="confetti" aria-hidden="true"></canvas>
+
+    <div class="site-shell">
+      <header class="topbar menu-only-topbar" id="inicio">
+        <a class="brand" href="index.html" aria-label="Volver a la página principal de Bar El Manudito">
+          <img src="assets/escudo-lda.png" alt="" width="42" height="48" />
+          <span>
+            <strong>EL MANUDITO</strong>
+            <small>CARTA DIGITAL</small>
+          </span>
+        </a>
+        <a class="menu-home-link" href="index.html">Página principal</a>
+      </header>
+
+      <main id="contenido">
+        <section class="section menu-section menu-only-section" id="menu" aria-labelledby="menu-title">
+          <div class="section-heading menu-only-heading">
+            <div>
+              <p class="eyebrow">SABOR ROJINEGRO</p>
+              <h1 id="menu-title">Nuestro menú</h1>
+            </div>
+            <p>Elegí una categoría y armá tu selección para compartirla con tu mesa.</p>
+          </div>
+
+          <div class="menu-toolbar">
+            <div class="menu-tabs" role="group" aria-label="Filtrar el menú">
+              <button class="menu-tab is-active" type="button" data-category="todos">Todo</button>
+              <button class="menu-tab" type="button" data-category="bocas">Bocas</button>
+              <button class="menu-tab" type="button" data-category="fuertes">Platos fuertes</button>
+              <button class="menu-tab" type="button" data-category="especialidades">Especialidades</button>
+              <button class="menu-tab" type="button" data-category="cervezas">Cervezas</button>
+              <button class="menu-tab" type="button" data-category="cocteles">Cócteles</button>
+              <button class="menu-tab" type="button" data-category="sin-alcohol">Refrescos</button>
+              <button class="menu-tab" type="button" data-category="combos">Combos</button>
+            </div>
+            <button class="selection-button" id="open-order" type="button" aria-haspopup="dialog">
+              Mi selección <span id="selection-count">0</span>
+            </button>
+          </div>
+
+          <div class="menu-grid" id="menu-grid" aria-live="polite"></div>
+          <noscript><p class="noscript">Activá JavaScript para consultar el menú interactivo.</p></noscript>
+        </section>
+
+        <section class="section menu-only-details" aria-label="Horario, ubicación y redes sociales">
+          <div class="visit-grid">
+            <div class="visit-card">
+              <p class="eyebrow">HORARIO MANUDITO</p>
+              <h2>Te esperamos</h2>
+              <dl class="hours-list">
+                <div><dt>Martes, miércoles y jueves</dt><dd>2:00 p. m. – 12:00 a. m.</dd></div>
+                <div><dt>Viernes, sábado y domingo</dt><dd>1:00 p. m. – 12:00 a. m.</dd></div>
+              </dl>
+            </div>
+            <div class="visit-card">
+              <p class="eyebrow">CÓMO LLEGAR</p>
+              <h2>Abrí tu aplicación favorita</h2>
+              <div class="route-links">
+                <a class="route-link" href="https://maps.app.goo.gl/PDF4zaawj4nS2r1G7" target="_blank" rel="noopener noreferrer">
+                  <span aria-hidden="true">⌖</span><strong>Google Maps</strong><small>Abrir ubicación</small>
+                </a>
+                <a class="route-link" href="https://ul.waze.com/ul?place=ChIJ2-1aHt35oI8RP2tk1lli3F0&amp;ll=10.02077320%2C-84.20928180&amp;navigate=yes&amp;utm_campaign=default&amp;utm_source=waze_website&amp;utm_medium=lm_share_location" target="_blank" rel="noopener noreferrer">
+                  <span aria-hidden="true">➤</span><strong>Waze</strong><small>Iniciar recorrido</small>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-social-links" aria-label="Redes sociales de Bar El Manudito">
+            <a href="https://www.instagram.com/manudito_lda/" target="_blank" rel="noopener noreferrer">Instagram <span>@manudito_lda</span></a>
+            <a href="https://www.facebook.com/BarManudito" target="_blank" rel="noopener noreferrer">Facebook <span>Bar Manudito</span></a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="menu-only-footer">
+        <p>Venta de bebidas alcohólicas únicamente a mayores de edad.</p>
+        <span>© <span id="current-year"></span> Bar El Manudito</span>
+      </footer>
+    </div>
+
+    <button class="floating-selection" id="floating-order" type="button" aria-haspopup="dialog" hidden>
+      <span id="floating-count">0</span>
+      Ver mi selección
+    </button>
+
+    <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-title">
+      <div class="dialog-header">
+        <div>
+          <span>PREVIA DEL PEDIDO</span>
+          <h2 id="order-title">Mi selección</h2>
+        </div>
+        <button id="close-order" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div class="order-list" id="order-list"></div>
+      <div class="order-total">
+        <span>Total estimado</span>
+        <strong id="order-total">₡0</strong>
+      </div>
+      <button class="button button-primary dialog-action" id="copy-order" type="button">Copiar selección</button>
+      <p class="copy-status" id="copy-status" aria-live="polite"></p>
+    </dialog>
+  </body>
+</html>
