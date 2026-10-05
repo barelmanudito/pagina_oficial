@@ -2387,3 +2387,77 @@ a.social-link:focus-visible {
     display: block;
   }
 }
+
+
+/* ==========================================================
+   MOBILE MENU V4
+   Sticky category strip + WebM-only animated beer layer.
+   ========================================================== */
+@media (max-width: 720px) {
+  .menu-only-page .menu-toolbar {
+    position: sticky;
+    top: 5.65rem;
+    z-index: 19;
+    display: block;
+    margin: 0.75rem -0.15rem 0.9rem;
+    padding: 0.45rem 0.15rem 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(5, 5, 5, 0.94);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .menu-only-page .menu-tabs {
+    display: flex;
+    gap: 0.45rem;
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 0.15rem 0.3rem 0.25rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .menu-only-page .menu-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menu-only-page .menu-tab {
+    flex: 0 0 auto;
+    min-height: 2.35rem;
+    padding: 0.5rem 0.72rem;
+    white-space: nowrap;
+    scroll-snap-align: center;
+  }
+
+  .menu-only-page .mobile-beer-animation {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .menu-only-page .mobile-beer-animation[src] {
+    display: block;
+  }
+
+  /* On phones the WebM and foam are the only animated/decorative beer layers. */
+  .menu-only-page .beer-bubbles,
+  .menu-only-page .frost,
+  .menu-only-page .drops {
+    display: none !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .menu-only-page .menu-toolbar {
+    top: 5.35rem;
+  }
+}

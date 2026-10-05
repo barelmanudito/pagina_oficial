@@ -215,24 +215,21 @@
 
   function activate(glass) {
     if (mobileScreen.matches) {
+      // Mobile: only use the WebM beer layer. It is loaded and played
+      // only while the card is close to the viewport.
       const video = glass.querySelector(".mobile-beer-animation");
-    
       if (!reducedMotion.matches && video) {
-    
         if (!video.getAttribute("src")) {
           video.src = video.dataset.src;
           video.load();
         }
-    
         video.play().catch(() => {});
       }
-    
       glass.classList.add("is-active");
       return;
     }
 
     const mobileVideo = glass.querySelector(".mobile-beer-animation");
-    
     if (mobileVideo) {
       mobileVideo.pause();
       mobileVideo.removeAttribute("src");
@@ -270,7 +267,6 @@
 
   function deactivate(glass) {
     const mobileVideo = glass.querySelector(".mobile-beer-animation");
-
     if (mobileVideo) {
       mobileVideo.pause();
       mobileVideo.removeAttribute("src");

@@ -175,17 +175,8 @@ function renderMenu(category = "todos") {
         <div class="beer" aria-hidden="true">
           <div class="beer-bubbles">${bubbleMarkup}</div>
         </div>
-        <video
-          class="mobile-beer-animation"
-          data-src="assets/beer-mobile.webm"
-          muted
-          loop
-          playsinline
-          preload="none"
-          aria-hidden="true"
-          width="180"
-          height="296"
-        ></video>
+        <video class="mobile-beer-animation" data-src="assets/beer-mobile.webm" muted loop playsinline
+          preload="none" aria-hidden="true" width="180" height="296"></video>
         <canvas class="frost" aria-hidden="true"></canvas>
         <div class="drops" aria-hidden="true"></div>
         <div class="beer-menu-content">
@@ -228,7 +219,14 @@ function renderMenu(category = "todos") {
 }
 
 menuTabs.forEach((tab) => {
-  tab.addEventListener("click", () => renderMenu(tab.dataset.category));
+  tab.addEventListener("click", () => {
+    renderMenu(tab.dataset.category);
+
+    // On phones keep the selected category easy to find in the sticky strip.
+    if (window.matchMedia("(max-width: 720px)").matches) {
+      tab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  });
 });
 
 renderMenu();
