@@ -8,10 +8,33 @@ function compactDate(date) {
 
 const rangeStart = new Date();
 rangeStart.setUTCHours(0, 0, 0, 0);
+
 const rangeEnd = new Date(rangeStart);
 rangeEnd.setUTCDate(rangeEnd.getUTCDate() + 180);
-const SOURCE_URL = process.env.PARTIDOS_URL
-  || `https://site.api.espn.com/apis/site/v2/sports/soccer/crc.1/scoreboard?dates=${compactDate(rangeStart)}-${compactDate(rangeEnd)}&limit=500`;
+
+const BASE_URL =
+  "https://site.api.espn.com/apis/site/v2/sports/soccer/crc.1/scoreboard";
+
+function monthKey(date) {
+  return date.toISOString().slice(0, 7).replace("-", "");
+}
+
+function monthsBetween(start, end) {
+  const months = [];
+
+  const current = new Date(Date.UTC(
+    start.getUTCFullYear(),
+    start.getUTCMonth(),
+    1
+  ));
+
+  while (current <= end) {
+    months.push(monthKey(current));
+    current.setUTCMonth(current.getUTCMonth() + 1);
+  }
+
+  return months;
+}
 
 function parseCsv(source) {
   const rows = [];
