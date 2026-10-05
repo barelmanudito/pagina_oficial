@@ -231,8 +231,13 @@
       return;
     }
 
-    const mobileImage = glass.querySelector(".mobile-beer-animation");
-    mobileImage?.removeAttribute("src");
+    const mobileVideo = glass.querySelector(".mobile-beer-animation");
+    
+    if (mobileVideo) {
+      mobileVideo.pause();
+      mobileVideo.removeAttribute("src");
+      mobileVideo.load();
+    }
     if (activeGlasses.has(glass)) return;
     let state = cachedGlasses.get(glass);
     if (!state) {
