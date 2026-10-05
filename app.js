@@ -166,11 +166,14 @@ function updateJar(card, item) {
 
 function renderMenu(category = "todos") {
   if (!menuCards.length) {
+    const lightweightMobileMenu = document.body.classList.contains("menu-only-page") &&
+      window.matchMedia("(max-width: 720px)").matches;
+    const bubbleMarkup = lightweightMobileMenu ? "" : "<span></span>".repeat(14);
     menuGrid.innerHTML = menuItems
       .map((item) => `
       <article class="menu-item" data-item-id="${item.id}">
         <div class="beer" aria-hidden="true">
-          <div class="beer-bubbles">${"<span></span>".repeat(14)}</div>
+          <div class="beer-bubbles">${bubbleMarkup}</div>
         </div>
         <img class="mobile-beer-animation" data-src="assets/beer-mobile.webp" alt="" aria-hidden="true"
           width="312" height="512" loading="lazy" decoding="async" />

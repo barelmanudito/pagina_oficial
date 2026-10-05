@@ -2116,8 +2116,9 @@ a.social-link:focus-visible {
   /* Main page only: the lion becomes the visual title. */
   body:not(.menu-only-page) .hero {
     display: flex;
-    min-height: calc(100svh - 5.25rem);
-    padding: 1.25rem 0 2rem;
+    min-height: 0;
+    margin: 0 auto;
+    padding: 0.35rem 0 0.55rem;
     align-items: center;
     justify-content: center;
   }
@@ -2129,7 +2130,7 @@ a.social-link:focus-visible {
   body:not(.menu-only-page) .hero-emblem {
     width: min(92vw, 26rem);
     margin: 0 auto;
-    padding: 0.75rem 0 1rem;
+    padding: 0;
     border: 0;
     background: transparent;
     box-shadow: none;
@@ -2142,14 +2143,17 @@ a.social-link:focus-visible {
   }
 
   body:not(.menu-only-page) .crest-stage {
-    min-height: min(72svh, 31rem);
     display: grid;
+    min-height: min(78vw, 22rem);
     place-items: center;
   }
 
   body:not(.menu-only-page) .crest-stage .crest-ring {
     width: min(78vw, 22rem);
     height: min(78vw, 22rem);
+    border: 2px solid rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: none;
   }
 
   body:not(.menu-only-page) .crest-stage img {
@@ -2286,6 +2290,55 @@ a.social-link:focus-visible {
     width: 2.15rem;
     height: 2.15rem;
     font-size: 1.15rem;
+  }
+
+  /* Mobile menu: animated WebP + top foam only. Canvas, drops and extra bubbles remain disabled. */
+  .menu-only-page .mobile-beer-animation {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .menu-only-page .mobile-beer-animation[src] {
+    display: block;
+  }
+
+  .menu-only-page .frost,
+  .menu-only-page .drops,
+  .menu-only-page .beer-bubbles {
+    display: none !important;
+  }
+
+  .menu-only-page .menu-item {
+    contain: layout paint style;
+    content-visibility: auto;
+    contain-intrinsic-size: 19rem;
+  }
+
+  /* Keep missing-image artwork centered like real product photos. */
+  .menu-only-page .menu-item-media.is-placeholder {
+    position: absolute;
+    top: 6.15rem;
+    right: 0.45rem;
+    bottom: 3.65rem;
+    left: 0.45rem;
+    width: auto;
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .menu-only-page .menu-item-photo.is-placeholder {
+    width: min(100%, 7.2rem);
+    height: auto;
+    max-height: 7rem;
+    object-fit: contain;
   }
 }
 

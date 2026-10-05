@@ -215,6 +215,8 @@
 
   function activate(glass) {
     if (mobileScreen.matches) {
+      // Mobile: only use the animated WebP beer layer.
+      // IntersectionObserver activates it only for cards near the viewport.
       const image = glass.querySelector(".mobile-beer-animation");
       if (!reducedMotion.matches && image && !image.getAttribute("src")) image.src = image.dataset.src;
       glass.classList.add("is-active");
