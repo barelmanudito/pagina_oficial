@@ -175,8 +175,17 @@ function renderMenu(category = "todos") {
         <div class="beer" aria-hidden="true">
           <div class="beer-bubbles">${bubbleMarkup}</div>
         </div>
-        <img class="mobile-beer-animation" data-src="assets/beer-mobile.webp" alt="" aria-hidden="true"
-          width="312" height="512" loading="lazy" decoding="async" />
+        <video
+          class="mobile-beer-animation"
+          data-src="assets/beer-mobile.webm"
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-hidden="true"
+          width="180"
+          height="296"
+        ></video>
         <canvas class="frost" aria-hidden="true"></canvas>
         <div class="drops" aria-hidden="true"></div>
         <div class="beer-menu-content">
