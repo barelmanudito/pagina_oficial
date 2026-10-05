@@ -215,10 +215,18 @@
 
   function activate(glass) {
     if (mobileScreen.matches) {
-      // Mobile: only use the animated WebP beer layer.
-      // IntersectionObserver activates it only for cards near the viewport.
-      const image = glass.querySelector(".mobile-beer-animation");
-      if (!reducedMotion.matches && image && !image.getAttribute("src")) image.src = image.dataset.src;
+      const video = glass.querySelector(".mobile-beer-animation");
+    
+      if (!reducedMotion.matches && video) {
+    
+        if (!video.getAttribute("src")) {
+          video.src = video.dataset.src;
+          video.load();
+        }
+    
+        video.play().catch(() => {});
+      }
+    
       glass.classList.add("is-active");
       return;
     }
