@@ -269,8 +269,13 @@
   }
 
   function deactivate(glass) {
-    const mobileImage = glass.querySelector(".mobile-beer-animation");
-    mobileImage?.removeAttribute("src");
+    const mobileVideo = glass.querySelector(".mobile-beer-animation");
+
+    if (mobileVideo) {
+      mobileVideo.pause();
+      mobileVideo.removeAttribute("src");
+      mobileVideo.load();
+    }
     const state = activeGlasses.get(glass);
     if (!state) {
       glass.classList.remove("is-active");
