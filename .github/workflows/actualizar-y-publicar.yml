@@ -39,17 +39,19 @@ jobs:
 
       - name: Actualizar partidos de Primera División
         if: github.event_name != 'push'
-        run: node scripts/actualizar-partidos.mjs
+        run: node pagina_oficial/scripts/actualizar-partidos.mjs
 
       - name: Guardar calendario actualizado
         if: github.event_name != 'push'
         run: |
-          if git diff --quiet -- data/calendario.csv; then
+          if git diff --quiet -- pagina_oficial/data/calendario.csv; then
             echo "El calendario ya estaba actualizado."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/calendario.csv
+
+            git add pagina_oficial/data/calendario.csv
+
             git commit -m "Actualizar partidos de Primera División"
             git push
           fi
@@ -60,7 +62,7 @@ jobs:
       - name: Preparar archivos de la página
         uses: actions/upload-pages-artifact@v4
         with:
-          path: "."
+          path: "pagina_oficial"
 
       - name: Publicar en GitHub Pages
         id: deployment
