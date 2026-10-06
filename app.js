@@ -221,16 +221,18 @@ function renderMenu(category = "todos") {
 menuTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     renderMenu(tab.dataset.category);
+
+    // On phones keep the selected category easy to find in the sticky strip.
+    if (window.matchMedia("(max-width: 720px)").matches &&
+      !document.body.classList.contains("menu-only-page")) {
+      tab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
   });
 });
 
-// En la página principal para computadora se muestran primero las cervezas.
-// La carta independiente y la versión móvil conservan la vista completa.
-const defaultMenuCategory = !document.body.classList.contains("menu-only-page")
-  && window.matchMedia("(min-width: 721px)").matches
-  ? "cervezas"
-  : "todos";
-renderMenu(defaultMenuCategory);
+const desktopMainPage = !document.body.classList.contains("menu-only-page")
+  && window.matchMedia("(min-width: 721px)").matches;
+renderMenu(desktopMainPage ? "cervezas" : "todos");
 
 menuGrid.addEventListener("click", (event) => {
   const button = event.target.closest("[data-add]");
@@ -455,40 +457,6 @@ function readCalendar(text) {
   return events;
 }
 
-function defaultMondayClosure() {
-  return {
-    title: "Cerrado",
-    type: "cerrado",
-    time: "",
-    description: "El bar permanece cerrado los lunes, salvo cuando se programe una actividad especial.",
-    venue: "",
-    matchId: "",
-    homeId: "",
-    home: "",
-    homeLogo: "",
-    awayId: "",
-    away: "",
-    awayLogo: "",
-    isMorera: false,
-    image: "",
-  };
-}
-
-function calendarEventsForKey(key) {
-  const scheduled = calendarEvents.get(key) || [];
-  const date = new Date(`${key}T12:00:00`);
-  const isMonday = Number.isFinite(date.getTime()) && date.getDay() === 1;
-
-  if (!isMonday) return scheduled;
-
-  // Un evento escrito manualmente en calendario.csv abre el bar ese lunes.
-  // Un partido agregado automáticamente no modifica por sí solo el cierre semanal.
-  if (scheduled.some((event) => event.type === "evento")) return scheduled;
-
-  const explicitClosure = scheduled.find((event) => event.type === "cerrado");
-  return [explicitClosure || defaultMondayClosure()];
-}
-
 function calendarMessage(title, message) {
   eventDetail.classList.remove("is-closed", "is-match", "is-home-match");
   eventTag.textContent = "AGENDA DEL BAR";
@@ -592,8 +560,116 @@ function eventMetaText(event) {
   return parts.join(" · ");
 }
 
+const resultsGrid = document.querySelector("#results-grid");
+
+function readResults(text) {
+  const [headings, ...records] = parseCsv(text);
+  const required = [
+    "fecha", "local", "escudo_local", "marcador_local", "visitante",
+    "escudo_visitante", "marcador_visitante", "ganador", "estadio", "en_morera",
+  ];
+  if (!headings) return [];
+  const normalized = headings.map((heading) => heading.toLowerCase());
+  if (required.some((heading) => !normalized.includes(heading))) {
+    throw new Error("Faltan columnas en resultados.csv");
+  }
+  const columns = Object.fromEntries(normalized.map((heading, index) => [heading, index]));
+  return records.map((record) => {
+    const value = (name) => (record[columns[name]] || "").trim();
+    return {
+      date: value("fecha"),
+      time: value("hora"),
+      home: value("local"),
+      homeLogo: value("escudo_local"),
+      homeScore: value("marcador_local"),
+      away: value("visitante"),
+      awayLogo: value("escudo_visitante"),
+      awayScore: value("marcador_visitante"),
+      winner: value("ganador"),
+      venue: value("estadio"),
+      isMorera: ["si", "sí", "true", "1"].includes(value("en_morera").toLowerCase()),
+      status: value("estado"),
+    };
+  }).filter((result) => result.date && result.home && result.away);
+}
+
+function renderResults(results) {
+  resultsGrid.replaceChildren();
+  if (!results.length) {
+    const message = document.createElement("p");
+    message.className = "results-message";
+    message.textContent = "Todavía no hay resultados disponibles de los últimos 30 días.";
+    resultsGrid.append(message);
+    return;
+  }
+
+  for (const result of results) {
+    const card = document.createElement("article");
+    card.className = "result-card";
+    if (result.isMorera) card.classList.add("is-home-result");
+
+    const date = document.createElement("p");
+    date.className = "result-date";
+    const parsedDate = new Date(`${result.date}T12:00:00`);
+    date.textContent = new Intl.DateTimeFormat("es-CR", {
+      day: "numeric", month: "short", year: "numeric",
+    }).format(parsedDate);
+
+    const scoreboard = document.createElement("div");
+    scoreboard.className = "result-scoreboard";
+    const resultTeam = (name, logo, score) => {
+      const team = document.createElement("div");
+      team.className = "result-team";
+      team.append(createTeamLogo(logo, name, true));
+      const label = document.createElement("span");
+      label.textContent = name;
+      const number = document.createElement("strong");
+      number.textContent = score || "–";
+      team.append(label, number);
+      return team;
+    };
+    const separator = document.createElement("span");
+    separator.className = "result-separator";
+    separator.textContent = "–";
+    scoreboard.append(
+      resultTeam(result.home, result.homeLogo, result.homeScore),
+      separator,
+      resultTeam(result.away, result.awayLogo, result.awayScore),
+    );
+
+    const meta = document.createElement("p");
+    meta.className = "result-meta";
+    meta.textContent = [
+      result.winner ? `Ganador: ${result.winner}` : "",
+      result.venue,
+      result.status,
+    ].filter(Boolean).join(" · ");
+    card.append(date, scoreboard);
+    if (result.isMorera) {
+      const badge = document.createElement("span");
+      badge.className = "morera-badge";
+      badge.textContent = "JUGADO EN EL MORERA SOTO";
+      card.append(badge);
+    }
+    card.append(meta);
+    resultsGrid.append(card);
+  }
+}
+
+async function loadResults() {
+  if (!resultsGrid) return;
+  try {
+    const response = await fetch("data/resultados.csv", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    renderResults(readResults(await response.text()));
+  } catch (error) {
+    resultsGrid.textContent = "No fue posible cargar los resultados recientes.";
+    console.warn("Resultados no disponibles:", error);
+  }
+}
+
 function showEvent(key, dayButton) {
-  const events = calendarEventsForKey(key);
+  const events = calendarEvents.get(key);
   if (!events?.length) return;
   document.querySelectorAll(".calendar-day").forEach((day) => day.classList.remove("is-selected"));
   dayButton.classList.add("is-selected");
@@ -665,7 +741,7 @@ function renderCalendar() {
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const key = dateKey(year, month, day);
-    const events = calendarEventsForKey(key);
+    const events = calendarEvents.get(key);
     const button = document.createElement("button");
     button.type = "button";
     button.className = "calendar-day";
@@ -850,6 +926,7 @@ renderOrder();
 if (calendarGrid) {
   renderCalendar();
   loadCalendar();
+  loadResults();
 }
 resizeConfetti();
 drawConfetti();

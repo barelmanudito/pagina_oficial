@@ -1,39 +1,34 @@
-# Cómo agregar eventos manuales
+# Calendario, eventos y resultados
 
-El archivo principal es `data/calendario.csv`. Conservá siempre su primera fila completa.
+## Archivo que debe editarse
 
-## Evento con imagen promocional
+Los eventos manuales se administran en `data/eventos.xlsx`, hoja `Eventos`.
 
-```csv
-2026-10-31,Noche de disfraces,evento,19:00,Premios para los mejores disfraces,,,,,,,,,,assets/eventos/disfraces.webp
-```
+Columnas:
 
-La imagen puede ser una ruta local dentro de la página o una dirección HTTPS. Si `imagen` queda vacía, la página no reserva ningún espacio para fotografías.
+- `fecha`: fecha en formato `AAAA-MM-DD`.
+- `nombre`: nombre visible del evento.
+- `tipo`: `evento` o `cerrado`.
+- `hora`: hora opcional.
+- `descripcion`: texto promocional o explicación del cierre.
+- `imagen`: ruta opcional como `assets/eventos/disfraces.webp`.
 
-## Día cerrado con imagen predeterminada
+Si `imagen` está vacía en un evento, la página no deja ningún espacio vacío. Para un registro `cerrado`, se usa el aviso predeterminado si no se indica otra imagen.
 
-```csv
-2026-12-25,Cerrado,cerrado,,El bar permanecerá cerrado este día,,,,,,,,,,
-```
+No edite manualmente `data/calendario.csv`: GitHub Actions lo genera usando el Excel y los partidos de ESPN.
 
-Cuando `imagen` está vacía en un registro `cerrado`, se utiliza automáticamente `assets/cerrado.svg`.
+## Lunes cerrados
 
-## Día cerrado con una imagen propia
+En la hoja `Configuracion`, `cerrar_lunes` está configurado como `SI`. El sistema agrega automáticamente un cierre a cada lunes, aunque exista un partido. El lunes solamente se abre cuando se agrega una actividad manual de tipo `evento` en `eventos.xlsx`.
 
-```csv
-2027-01-01,Cerrado,cerrado,,Regresamos mañana,,,,,,,,,,assets/eventos/cerrado-enero.webp
-```
+Para desactivar esta regla, cambie `SI` por `NO` y vuelva a subir el Excel.
 
-Los partidos se agregan automáticamente. Las columnas de estadio, equipos y escudos son completadas por el GitHub Action y no es necesario escribirlas manualmente.
+La opción `imagen_cerrado` permite cambiar la imagen predeterminada de los lunes cerrados.
 
-## Regla de los lunes
+## Resultados
 
-Los lunes se muestran como **cerrado** de forma automática. Un partido agregado por el sistema no abre el bar ni sustituye este cierre.
+El archivo `data/resultados.csv` se genera automáticamente con los partidos finalizados de los últimos 30 días. Incluye marcador, estadio, ganador y escudos. La página lo presenta debajo del calendario.
 
-Para abrir un lunes por una actividad especial, agregá en Excel o directamente en `data/calendario.csv` una fila con esa fecha y escribí `evento` en la columna `tipo`. Por ejemplo:
+## Actualización
 
-```csv
-2026-10-12,Actividad especial,evento,18:00,El bar abrirá por esta actividad,,,,,,,,,,
-```
-
-Al guardar desde Excel, conservá el archivo en formato CSV y no cambiés los nombres de las columnas de la primera fila.
+Después de subir `eventos.xlsx`, ejecute el workflow **Actualizar calendario y publicar página**. También se ejecuta automáticamente todos los días.

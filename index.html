@@ -123,11 +123,11 @@
 
           <div class="menu-toolbar">
             <div class="menu-tabs" role="group" aria-label="Filtrar el menú">
-              <button class="menu-tab is-active" type="button" data-category="todos">Todo</button>
+              <button class="menu-tab" type="button" data-category="todos">Todo</button>
               <button class="menu-tab" type="button" data-category="bocas">Bocas</button>
               <button class="menu-tab" type="button" data-category="fuertes">Platos fuertes</button>
               <button class="menu-tab" type="button" data-category="especialidades">Especialidades</button>
-              <button class="menu-tab" type="button" data-category="cervezas">Cervezas</button>
+              <button class="menu-tab is-active" type="button" data-category="cervezas">Cervezas</button>
               <button class="menu-tab" type="button" data-category="cocteles">Cócteles</button>
               <button class="menu-tab" type="button" data-category="sin-alcohol">Refrescos</button>
               <button class="menu-tab" type="button" data-category="combos">Combos</button>
@@ -178,6 +178,19 @@
                 <span>Calendario del Manudito</span>
               </div>
             </aside>
+          </div>
+
+          <div class="results-panel" aria-labelledby="results-title">
+            <div class="results-heading">
+              <div>
+                <p class="eyebrow">ÚLTIMOS 30 DÍAS</p>
+                <h3 id="results-title">Resultados de Primera División</h3>
+              </div>
+              <p>Marcadores, escudos y estadio de los encuentros más recientes.</p>
+            </div>
+            <div class="results-grid" id="results-grid" aria-live="polite">
+              <p class="results-message">Cargando resultados…</p>
+            </div>
           </div>
         </section>
 
