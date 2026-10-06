@@ -366,6 +366,7 @@ const eventTag = document.querySelector("#event-tag");
 const eventDetail = document.querySelector("#event-detail");
 const eventDate = document.querySelector("#event-date");
 const eventName = document.querySelector("#event-name");
+const eventVisual = document.querySelector("#event-visual");
 const eventDescription = document.querySelector("#event-description");
 const eventMeta = document.querySelector("#event-meta");
 let calendarEvents = new Map();
@@ -404,7 +405,11 @@ function parseCsv(text) {
 function readCalendar(text) {
   const [headings, ...records] = parseCsv(text);
   const required = ["fecha", "nombre", "tipo"];
-  const optional = ["hora", "descripcion"];
+  const optional = [
+    "hora", "descripcion", "estadio", "id_partido", "id_local", "local",
+    "escudo_local", "id_visitante", "visitante", "escudo_visitante",
+    "en_morera", "imagen",
+  ];
   if (!headings || required.some((heading) => !headings.map((value) => value.toLowerCase()).includes(heading))) {
     throw new Error("Faltan columnas en calendario.csv");
   }
@@ -423,7 +428,25 @@ function readCalendar(text) {
     if (!["evento", "partido", "cerrado"].includes(type)) continue;
     const title = value("nombre") || (type === "cerrado" ? "Día sin servicio" : "");
     if (!title) continue;
-    const entry = { title, type, time: value("hora"), description: value("descripcion") };
+    const venue = value("estadio");
+    const moreraValue = value("en_morera").toLowerCase();
+    const entry = {
+      title,
+      type,
+      time: value("hora"),
+      description: value("descripcion"),
+      venue,
+      matchId: value("id_partido"),
+      homeId: value("id_local"),
+      home: value("local"),
+      homeLogo: value("escudo_local"),
+      awayId: value("id_visitante"),
+      away: value("visitante"),
+      awayLogo: value("escudo_visitante"),
+      isMorera: ["si", "sí", "true", "1"].includes(moreraValue)
+        || venue.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("alejandro morera soto"),
+      image: value("imagen"),
+    };
     const current = events.get(key) || [];
     if (type === "cerrado") events.set(key, [entry]);
     else if (!current.some((item) => item.type === "cerrado")) events.set(key, [...current, entry]);
@@ -432,10 +455,12 @@ function readCalendar(text) {
 }
 
 function calendarMessage(title, message) {
-  eventDetail.classList.remove("is-closed", "is-match");
+  eventDetail.classList.remove("is-closed", "is-match", "is-home-match");
   eventTag.textContent = "AGENDA DEL BAR";
   eventDate.textContent = "Seleccioná una fecha marcada";
   eventName.textContent = title;
+  eventVisual.replaceChildren();
+  eventVisual.hidden = true;
   eventDescription.textContent = message;
   eventMeta.textContent = "";
 }
@@ -453,6 +478,85 @@ async function loadCalendar() {
   }
 }
 
+function eventImageSource(event) {
+  if (event.image) return event.image;
+  if (event.type === "cerrado") return "assets/cerrado.svg";
+  return "";
+}
+
+function createEventImage(event, compact = false) {
+  const source = eventImageSource(event);
+  if (!source) return null;
+  const image = document.createElement("img");
+  image.className = compact ? "event-promo-image is-compact" : "event-promo-image";
+  image.src = source;
+  image.alt = event.type === "cerrado" ? "Bar cerrado" : `Promoción: ${event.title}`;
+  image.loading = "lazy";
+  image.addEventListener("error", () => image.remove(), { once: true });
+  return image;
+}
+
+function createTeamLogo(source, name, compact = false) {
+  const frame = document.createElement("span");
+  frame.className = compact ? "team-logo-frame is-compact" : "team-logo-frame";
+  if (source) {
+    const image = document.createElement("img");
+    image.src = source;
+    image.alt = `Escudo de ${name || "equipo"}`;
+    image.loading = "lazy";
+    image.addEventListener("error", () => frame.classList.add("has-error"), { once: true });
+    frame.append(image);
+  }
+  const fallback = document.createElement("span");
+  fallback.className = "team-logo-fallback";
+  fallback.textContent = (name || "?").split(/\s+/).map((word) => word[0]).join("").slice(0, 3).toUpperCase();
+  frame.append(fallback);
+  return frame;
+}
+
+function createMatchVisual(event, compact = false) {
+  if (!event.home && !event.away && !event.homeLogo && !event.awayLogo) return null;
+  const visual = document.createElement("div");
+  visual.className = compact ? "match-visual is-compact" : "match-visual";
+
+  const team = (name, logo) => {
+    const block = document.createElement("div");
+    block.className = "match-team";
+    block.append(createTeamLogo(logo, name, compact));
+    const label = document.createElement("span");
+    label.textContent = name || "Por confirmar";
+    block.append(label);
+    return block;
+  };
+
+  const versus = document.createElement("strong");
+  versus.className = "match-versus";
+  versus.textContent = "VS";
+  visual.append(team(event.home, event.homeLogo), versus, team(event.away, event.awayLogo));
+  return visual;
+}
+
+function renderEventVisual(event) {
+  eventVisual.replaceChildren();
+  const visual = event.type === "partido" ? createMatchVisual(event) : createEventImage(event);
+  if (visual) eventVisual.append(visual);
+  if (event.isMorera) {
+    const badge = document.createElement("span");
+    badge.className = "morera-badge";
+    badge.textContent = "EN EL ALEJANDRO MORERA SOTO";
+    eventVisual.append(badge);
+  }
+  eventVisual.hidden = !eventVisual.childElementCount;
+}
+
+function eventMetaText(event) {
+  const parts = [];
+  if (event.time) parts.push(event.time);
+  else parts.push(event.type === "cerrado" ? "Sin servicio" : "Horario por confirmar");
+  if (event.venue) parts.push(event.venue);
+  return parts.join(" · ");
+}
+
 function showEvent(key, dayButton) {
   const events = calendarEvents.get(key);
   if (!events?.length) return;
@@ -468,23 +572,43 @@ function showEvent(key, dayButton) {
     const event = events[0];
     eventDetail.classList.toggle("is-closed", event.type === "cerrado");
     eventDetail.classList.toggle("is-match", event.type === "partido");
-    eventTag.textContent = event.type === "cerrado" ? "DÍA SIN SERVICIO" : event.type === "partido" ? "PARTIDO DE PRIMERA" : "EVENTO";
+    eventDetail.classList.toggle("is-home-match", event.isMorera);
+    eventTag.textContent = event.type === "cerrado"
+      ? "DÍA SIN SERVICIO"
+      : event.isMorera
+        ? "PARTIDO EN CASA"
+        : event.type === "partido" ? "PARTIDO DE PRIMERA" : "EVENTO";
     eventName.textContent = event.title;
+    renderEventVisual(event);
     eventDescription.textContent = event.description || (event.type === "cerrado" ? "El bar permanecerá cerrado este día." : event.type === "partido" ? "Viví la Primera División en Bar El Manudito." : "Te esperamos en el bar.");
-    eventMeta.textContent = event.time || (event.type === "cerrado" ? "Sin servicio" : "Horario por confirmar");
+    eventMeta.textContent = eventMetaText(event);
     return;
   }
   eventDetail.classList.remove("is-closed");
   eventDetail.classList.toggle("is-match", events.some((event) => event.type === "partido"));
+  eventDetail.classList.toggle("is-home-match", events.some((event) => event.isMorera));
   eventTag.textContent = events.some((event) => event.type === "partido") ? "PARTIDOS Y EVENTOS" : "EVENTOS";
   eventName.textContent = `${events.length} actividades`;
+  eventVisual.replaceChildren();
+  eventVisual.hidden = true;
   eventDescription.replaceChildren();
   for (const event of events) {
-    const item = document.createElement("p");
+    const item = document.createElement("article");
+    item.className = "event-list-item";
+    const visual = event.type === "partido" ? createMatchVisual(event, true) : createEventImage(event, true);
+    if (visual) item.append(visual);
     const title = document.createElement("strong");
     title.textContent = event.title;
-    item.append(title, document.createTextNode(` · ${event.time || "Horario por confirmar"}`));
-    if (event.description) item.append(document.createElement("br"), document.createTextNode(event.description));
+    const copy = document.createElement("p");
+    copy.append(title, document.createTextNode(` · ${eventMetaText(event)}`));
+    if (event.isMorera) {
+      const badge = document.createElement("span");
+      badge.className = "morera-badge is-inline";
+      badge.textContent = "EN CASA";
+      copy.append(document.createElement("br"), badge);
+    }
+    if (event.description) copy.append(document.createElement("br"), document.createTextNode(event.description));
+    item.append(copy);
     eventDescription.append(item);
   }
   eventMeta.textContent = "Agenda del día";
@@ -516,6 +640,21 @@ function renderCalendar() {
     if (events?.length) button.classList.add("has-event");
     if (events?.some((event) => event.type === "partido")) button.classList.add("is-match");
     if (events?.some((event) => event.type === "cerrado")) button.classList.add("is-closed");
+    if (events?.some((event) => event.isMorera)) {
+      button.classList.add("is-home-match");
+      const homeBadge = document.createElement("span");
+      homeBadge.className = "calendar-home-badge";
+      homeBadge.textContent = "CASA";
+      button.append(homeBadge);
+    }
+    const closedEvent = events?.find((event) => event.type === "cerrado");
+    if (closedEvent) {
+      const closedImage = createEventImage(closedEvent, true);
+      if (closedImage) {
+        closedImage.classList.add("calendar-closed-image");
+        button.append(closedImage);
+      }
+    }
     if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
       button.classList.add("is-today");
       button.setAttribute("aria-current", "date");

@@ -1,42 +1,84 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const CSV_PATH = new URL("../data/calendario.csv", import.meta.url);
+const TIME_ZONE = "America/Costa_Rica";
+const DAYS_AHEAD = 180;
+const API_BASE = "https://site.api.espn.com/apis/site/v2/sports/soccer/crc.1/scoreboard";
+const headings = [
+  "fecha", "nombre", "tipo", "hora", "descripcion", "estadio",
+  "id_partido", "id_local", "local", "escudo_local", "id_visitante",
+  "visitante", "escudo_visitante", "en_morera", "imagen",
+];
 
-function compactDate(date) {
-  return date.toISOString().slice(0, 10).replaceAll("-", "");
+function costaRicaParts(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: TIME_ZONE,
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(date);
+  const value = (type) => parts.find((part) => part.type === type)?.value || "";
+  return {
+    date: `${value("year")}-${value("month")}-${value("day")}`,
+    time: `${value("hour")}:${value("minute")}`,
+  };
 }
 
-const rangeStart = new Date();
-rangeStart.setUTCHours(0, 0, 0, 0);
-
-const rangeEnd = new Date(rangeStart);
-rangeEnd.setUTCDate(rangeEnd.getUTCDate() + 180);
-
-const BASE_URL =
-  "https://site.api.espn.com/apis/site/v2/sports/soccer/crc.1/scoreboard";
-
-function monthKey(date) {
-  return date.toISOString().slice(0, 7).replace("-", "");
+function addDays(dateText, days) {
+  const date = new Date(`${dateText}T12:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
 }
 
-function monthsBetween(start, end) {
+function monthKeys(start, end) {
   const months = [];
-
-  const current = new Date(Date.UTC(
-    start.getUTCFullYear(),
-    start.getUTCMonth(),
-    1
-  ));
-
-  while (current <= end) {
-    months.push(monthKey(current));
-    current.setUTCMonth(current.getUTCMonth() + 1);
+  const cursor = new Date(`${start.slice(0, 7)}-01T12:00:00Z`);
+  const last = new Date(`${end.slice(0, 7)}-01T12:00:00Z`);
+  while (cursor <= last) {
+    months.push(`${cursor.getUTCFullYear()}${String(cursor.getUTCMonth() + 1).padStart(2, "0")}`);
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
   }
-
   return months;
 }
 
+function daysInPeriod(month, start, end) {
+  const cursor = new Date(`${month.slice(0, 4)}-${month.slice(4)}-01T12:00:00Z`);
+  const days = [];
+  while (`${cursor.getUTCFullYear()}${String(cursor.getUTCMonth() + 1).padStart(2, "0")}` === month) {
+    const key = cursor.toISOString().slice(0, 10);
+    if (key >= start && key <= end) days.push(key.replaceAll("-", ""));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return days;
+}
+
+async function fetchPeriod(period) {
+  const response = await fetch(`${API_BASE}?dates=${period}&limit=500`, {
+    headers: { Accept: "application/json", "User-Agent": "Bar-El-Manudito-Calendar/2.0" },
+  });
+  if (!response.ok) throw new Error(`ESPN respondió ${response.status} para ${period}`);
+  const payload = await response.json();
+  if (!Array.isArray(payload.events)) throw new Error(`ESPN no devolvió eventos para ${period}`);
+  return payload.events;
+}
+
+async function fetchEvents(start, end) {
+  const events = [];
+  for (const month of monthKeys(start, end)) {
+    try {
+      events.push(...await fetchPeriod(month));
+    } catch (monthlyError) {
+      console.warn(`${monthlyError.message}. Se consultará día por día.`);
+      for (const day of daysInPeriod(month, start, end)) {
+        try { events.push(...await fetchPeriod(day)); }
+        catch (dailyError) { console.warn(dailyError.message); }
+      }
+    }
+  }
+  return events;
+}
+
 function parseCsv(source) {
+  source = source.replace(/^\uFEFF/, "");
   const rows = [];
   let row = [];
   let cell = "";
@@ -67,103 +109,80 @@ function csvCell(value) {
   return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
 }
 
-function costaRicaParts(date) {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Costa_Rica",
-    year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
-  }).formatToParts(date);
-  const value = (type) => parts.find((part) => part.type === type)?.value || "";
-  return { date: `${value("year")}-${value("month")}-${value("day")}`, time: `${value("hour")}:${value("minute")}` };
-}
-
 function teamName(competitor) {
-  return competitor?.team?.shortDisplayName
-    || competitor?.team?.displayName
+  return competitor?.team?.displayName
+    || competitor?.team?.shortDisplayName
     || competitor?.team?.name
     || "Rival por confirmar";
 }
 
-const months = monthsBetween(rangeStart, rangeEnd);
-
-const allEvents = [];
-
-for (const month of months) {
-  const url = `${BASE_URL}?dates=${month}&limit=500`;
-
-  console.log(`Consultando ESPN: ${month}`);
-
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Bar-El-Manudito-Calendar/1.0"
-    },
-  });
-
-  if (!response.ok) {
-    console.warn(
-      `ESPN respondió ${response.status} para ${month}. Se omite ese mes.`
-    );
-    continue;
-  }
-
-  const payload = await response.json();
-
-  if (Array.isArray(payload.events)) {
-    allEvents.push(...payload.events);
-  }
+function teamLogo(competitor) {
+  return competitor?.team?.logo || competitor?.team?.logos?.[0]?.href || "";
 }
 
-const today = new Date();
-today.setUTCHours(0, 0, 0, 0);
-const scheduled = allEvents.filter((event) => {
-  const date = new Date(event.date);
+function isMorera(venue = "") {
+  return venue.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("alejandro morera soto");
+}
 
-  return (
-    Number.isFinite(date.getTime()) &&
-    date >= rangeStart &&
-    date <= rangeEnd &&
-    !event.status?.type?.completed
-  );
-});
-if (!scheduled.length) throw new Error("La fuente no devolvió partidos futuros; el CSV se conserva sin cambios");
+const start = costaRicaParts(new Date()).date;
+const end = addDays(start, DAYS_AHEAD);
+const payloadEvents = await fetchEvents(start, end);
+const scheduledById = new Map();
 
-const automaticRows = scheduled.flatMap((event) => {
+for (const event of payloadEvents) {
+  const eventDate = new Date(event.date);
+  if (!Number.isFinite(eventDate.getTime()) || event.status?.type?.completed) continue;
+  const localDate = costaRicaParts(eventDate).date;
+  if (localDate < start || localDate > end) continue;
+  scheduledById.set(String(event.id || `${event.date}|${event.name}`), event);
+}
+
+const automaticRows = [...scheduledById.values()].flatMap((event) => {
   const competition = event.competitions?.[0];
   const competitors = competition?.competitors || [];
   const home = competitors.find((competitor) => competitor.homeAway === "home");
   const away = competitors.find((competitor) => competitor.homeAway === "away");
   if (!home || !away) return [];
-  const start = new Date(event.date);
-  const local = costaRicaParts(start);
-  const venue = competition?.venue?.fullName;
+  const localTime = costaRicaParts(new Date(event.date));
+  const venue = competition?.venue?.fullName || "";
+  const homeName = teamName(home);
+  const awayName = teamName(away);
   return [{
-    fecha: local.date,
-    nombre: `${teamName(home)} vs ${teamName(away)}`,
+    fecha: localTime.date,
+    nombre: `${homeName} vs ${awayName}`,
     tipo: "partido",
-    hora: local.time,
-    descripcion: `Primera División de Costa Rica${venue ? ` · ${venue}` : ""}`,
+    hora: localTime.time,
+    descripcion: "Primera División de Costa Rica",
+    estadio: venue,
+    id_partido: event.id || "",
+    id_local: home.team?.id || "",
+    local: homeName,
+    escudo_local: teamLogo(home),
+    id_visitante: away.team?.id || "",
+    visitante: awayName,
+    escudo_visitante: teamLogo(away),
+    en_morera: isMorera(venue) ? "si" : "no",
+    imagen: "",
   }];
 });
 
 const current = parseCsv(await readFile(CSV_PATH, "utf8"));
-const [headings, ...records] = current;
-const expected = ["fecha", "nombre", "tipo", "hora", "descripcion"];
-if (!headings || expected.some((heading) => !headings.includes(heading))) {
-  throw new Error(`El encabezado debe incluir: ${expected.join(", ")}`);
+const [currentHeadings, ...records] = current;
+const required = ["fecha", "nombre", "tipo", "hora", "descripcion"];
+if (!currentHeadings || required.some((heading) => !currentHeadings.includes(heading))) {
+  throw new Error(`El encabezado debe incluir: ${required.join(", ")}`);
 }
-const indexes = Object.fromEntries(expected.map((heading) => [heading, headings.indexOf(heading)]));
+const indexes = Object.fromEntries(headings.map((heading) => [heading, currentHeadings.indexOf(heading)]));
 const manualRows = records
   .filter((record) => (record[indexes.tipo] || "").toLowerCase() !== "partido")
-  .map((record) => Object.fromEntries(expected.map((heading) => [heading, record[indexes[heading]] || ""])));
+  .map((record) => Object.fromEntries(headings.map((heading) => [heading, indexes[heading] >= 0 ? record[indexes[heading]] || "" : ""])));
 
-const uniqueMatches = [...new Map(automaticRows.map((row) => [`${row.fecha}|${row.hora}|${row.nombre}`, row])).values()];
-const rows = [...manualRows, ...uniqueMatches].sort((a, b) =>
+const rows = [...manualRows, ...automaticRows].sort((a, b) =>
   a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora) || a.nombre.localeCompare(b.nombre, "es")
 );
-const output = [expected, ...rows.map((row) => expected.map((heading) => row[heading]))]
+const output = [headings, ...rows.map((row) => headings.map((heading) => row[heading]))]
   .map((row) => row.map(csvCell).join(","))
   .join("\n") + "\n";
 
 await writeFile(CSV_PATH, output, "utf8");
-console.log(`Calendario actualizado: ${uniqueMatches.length} partido(s) de Primera División y ${manualRows.length} fila(s) manual(es).`);
+console.log(`Calendario actualizado: ${automaticRows.length} partido(s), ${manualRows.length} evento(s) manual(es), rango ${start} a ${end}.`);
