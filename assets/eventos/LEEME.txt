@@ -1,0 +1,6 @@
+Guardá aquí las imágenes promocionales de los eventos.
+
+Ejemplo de ruta para escribir en eventos.xlsx:
+assets/eventos/noche-rojinegra.webp
+
+Se recomiendan imágenes WebP o JPG optimizadas para web.

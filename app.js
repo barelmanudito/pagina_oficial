@@ -557,6 +557,114 @@ function eventMetaText(event) {
   return parts.join(" · ");
 }
 
+const resultsGrid = document.querySelector("#results-grid");
+
+function readResults(text) {
+  const [headings, ...records] = parseCsv(text);
+  const required = [
+    "fecha", "local", "escudo_local", "marcador_local", "visitante",
+    "escudo_visitante", "marcador_visitante", "ganador", "estadio", "en_morera",
+  ];
+  if (!headings) return [];
+  const normalized = headings.map((heading) => heading.toLowerCase());
+  if (required.some((heading) => !normalized.includes(heading))) {
+    throw new Error("Faltan columnas en resultados.csv");
+  }
+  const columns = Object.fromEntries(normalized.map((heading, index) => [heading, index]));
+  return records.map((record) => {
+    const value = (name) => (record[columns[name]] || "").trim();
+    return {
+      date: value("fecha"),
+      time: value("hora"),
+      home: value("local"),
+      homeLogo: value("escudo_local"),
+      homeScore: value("marcador_local"),
+      away: value("visitante"),
+      awayLogo: value("escudo_visitante"),
+      awayScore: value("marcador_visitante"),
+      winner: value("ganador"),
+      venue: value("estadio"),
+      isMorera: ["si", "sí", "true", "1"].includes(value("en_morera").toLowerCase()),
+      status: value("estado"),
+    };
+  }).filter((result) => result.date && result.home && result.away);
+}
+
+function renderResults(results) {
+  resultsGrid.replaceChildren();
+  if (!results.length) {
+    const message = document.createElement("p");
+    message.className = "results-message";
+    message.textContent = "Todavía no hay resultados disponibles de los últimos 30 días.";
+    resultsGrid.append(message);
+    return;
+  }
+
+  for (const result of results) {
+    const card = document.createElement("article");
+    card.className = "result-card";
+    if (result.isMorera) card.classList.add("is-home-result");
+
+    const date = document.createElement("p");
+    date.className = "result-date";
+    const parsedDate = new Date(`${result.date}T12:00:00`);
+    date.textContent = new Intl.DateTimeFormat("es-CR", {
+      day: "numeric", month: "short", year: "numeric",
+    }).format(parsedDate);
+
+    const scoreboard = document.createElement("div");
+    scoreboard.className = "result-scoreboard";
+    const resultTeam = (name, logo, score) => {
+      const team = document.createElement("div");
+      team.className = "result-team";
+      team.append(createTeamLogo(logo, name, true));
+      const label = document.createElement("span");
+      label.textContent = name;
+      const number = document.createElement("strong");
+      number.textContent = score || "–";
+      team.append(label, number);
+      return team;
+    };
+    const separator = document.createElement("span");
+    separator.className = "result-separator";
+    separator.textContent = "–";
+    scoreboard.append(
+      resultTeam(result.home, result.homeLogo, result.homeScore),
+      separator,
+      resultTeam(result.away, result.awayLogo, result.awayScore),
+    );
+
+    const meta = document.createElement("p");
+    meta.className = "result-meta";
+    meta.textContent = [
+      result.winner ? `Ganador: ${result.winner}` : "",
+      result.venue,
+      result.status,
+    ].filter(Boolean).join(" · ");
+    card.append(date, scoreboard);
+    if (result.isMorera) {
+      const badge = document.createElement("span");
+      badge.className = "morera-badge";
+      badge.textContent = "JUGADO EN EL MORERA SOTO";
+      card.append(badge);
+    }
+    card.append(meta);
+    resultsGrid.append(card);
+  }
+}
+
+async function loadResults() {
+  if (!resultsGrid) return;
+  try {
+    const response = await fetch("data/resultados.csv", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Error ${response.status}`);
+    renderResults(readResults(await response.text()));
+  } catch (error) {
+    resultsGrid.textContent = "No fue posible cargar los resultados recientes.";
+    console.warn("Resultados no disponibles:", error);
+  }
+}
+
 function showEvent(key, dayButton) {
   const events = calendarEvents.get(key);
   if (!events?.length) return;
@@ -815,6 +923,7 @@ renderOrder();
 if (calendarGrid) {
   renderCalendar();
   loadCalendar();
+  loadResults();
 }
 resizeConfetti();
 drawConfetti();
