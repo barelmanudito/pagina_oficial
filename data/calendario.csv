@@ -1,7 +1,5 @@
 fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_local,id_visitante,visitante,escudo_visitante,en_morera,imagen
 2026-10-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-13,Cartaginés vs Puntarenas FC,partido,18:00,Primera División de Costa Rica,"Estadio José Rafael ""Fello"" Meza Ivankovich",401876843,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,no,
-2026-10-13,AD San Carlos vs Inter de San Carlos,partido,20:00,Primera División de Costa Rica,Estadio Carlos Ugalde Álvarez,401876893,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,no,
 2026-10-14,Pérez Zeledón vs Escorpiones Belén,partido,17:00,Primera División de Costa Rica,Estadio Municipal de Pérez Zeledón,401876840,7234,Pérez Zeledón,https://a.espncdn.com/i/teamlogos/soccer/500/7234.png,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,no,
 2026-10-14,Alajuelense vs Herediano,partido,20:00,Primera División de Costa Rica,Alejandro Morera Soto,401876841,2057,Alajuelense,https://a.espncdn.com/i/teamlogos/soccer/500/2057.png,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,si,
 2026-10-15,Saprissa vs Sporting San José,partido,20:00,Primera División de Costa Rica,Estadio Ricardo Saprissa,401876842,858,Saprissa,https://a.espncdn.com/i/teamlogos/soccer/500/858.png,20705,Sporting San José,https://a.espncdn.com/i/teamlogos/soccer/500/20705.png,no,
@@ -65,3 +63,4 @@ fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_loca
 2027-03-22,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2027-03-29,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2027-04-05,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
+2027-04-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
