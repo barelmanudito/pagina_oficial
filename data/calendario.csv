@@ -1,6 +1,5 @@
 fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_local,id_visitante,visitante,escudo_visitante,en_morera,imagen
 2026-10-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-17,Inter de San Carlos vs Alajuelense,partido,20:00,Primera División de Costa Rica,Estadio Carlos Ugalde Álvarez,401876892,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,2057,Alajuelense,https://a.espncdn.com/i/teamlogos/soccer/500/2057.png,no,
 2026-10-18,Cartaginés vs Saprissa,partido,11:00,Primera División de Costa Rica,"Estadio José Rafael ""Fello"" Meza Ivankovich",401876839,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,858,Saprissa,https://a.espncdn.com/i/teamlogos/soccer/500/858.png,no,
 2026-10-18,Pérez Zeledón vs Herediano,partido,16:00,Primera División de Costa Rica,Estadio Municipal de Pérez Zeledón,401876837,7234,Pérez Zeledón,https://a.espncdn.com/i/teamlogos/soccer/500/7234.png,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,no,
 2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
