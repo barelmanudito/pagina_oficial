@@ -1,8 +1,6 @@
 fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_local,id_visitante,visitante,escudo_visitante,en_morera,imagen
 2026-10-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-19,Sporting San José vs AD San Carlos,partido,18:00,Primera División de Costa Rica,Estadio Puente Piedra,401876836,20705,Sporting San José,https://a.espncdn.com/i/teamlogos/soccer/500/20705.png,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,no,
-2026-10-19,Escorpiones Belén vs Puntarenas FC,partido,20:00,Primera División de Costa Rica,Estadio Ricardo Saprissa,401876838,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,no,
 2026-10-23,Escorpiones Belén vs Sporting San José,partido,20:00,Primera División de Costa Rica,Estadio Ricardo Saprissa,401876832,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,20705,Sporting San José,https://a.espncdn.com/i/teamlogos/soccer/500/20705.png,no,
 2026-10-24,Puntarenas FC vs Inter de San Carlos,partido,18:00,Primera División de Costa Rica,Estadio Lito Pérez,401876891,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,no,
 2026-10-24,Herediano vs Cartaginés,partido,20:00,Primera División de Costa Rica,Estadio Carlos Alvarado,401876834,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,no,
