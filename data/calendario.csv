@@ -1,8 +1,6 @@
 fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_local,id_visitante,visitante,escudo_visitante,en_morera,imagen
 2026-10-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-24,Puntarenas FC vs Inter de San Carlos,partido,18:00,Primera División de Costa Rica,Estadio Lito Pérez,401876891,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,no,
-2026-10-24,Herediano vs Cartaginés,partido,20:00,Primera División de Costa Rica,Estadio Carlos Alvarado,401876834,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,no,
 2026-10-25,AD San Carlos vs Saprissa,partido,16:00,Primera División de Costa Rica,Estadio Carlos Ugalde Álvarez,401876835,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,858,Saprissa,https://a.espncdn.com/i/teamlogos/soccer/500/858.png,no,
 2026-10-25,Alajuelense vs Pérez Zeledón,partido,18:00,Primera División de Costa Rica,Alejandro Morera Soto,401876833,2057,Alajuelense,https://a.espncdn.com/i/teamlogos/soccer/500/2057.png,7234,Pérez Zeledón,https://a.espncdn.com/i/teamlogos/soccer/500/7234.png,si,
 2026-10-26,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
