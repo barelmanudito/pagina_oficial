@@ -2,8 +2,6 @@ fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_loca
 2026-10-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-10-26,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-30,Inter de San Carlos vs Escorpiones Belén,partido,18:00,Primera División de Costa Rica,Estadio Carlos Ugalde Álvarez,401876890,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,no,
-2026-10-30,Pérez Zeledón vs Puntarenas FC,partido,20:00,Primera División de Costa Rica,Estadio Municipal de Pérez Zeledón,401876829,7234,Pérez Zeledón,https://a.espncdn.com/i/teamlogos/soccer/500/7234.png,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,no,
 2026-10-31,Sporting San José vs Herediano,partido,20:00,Primera División de Costa Rica,Estadio Puente Piedra,401876828,20705,Sporting San José,https://a.espncdn.com/i/teamlogos/soccer/500/20705.png,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,no,
 2026-11-01,Cartaginés vs AD San Carlos,partido,11:00,Primera División de Costa Rica,"Estadio José Rafael ""Fello"" Meza Ivankovich",401876831,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,no,
 2026-11-01,Saprissa vs Alajuelense,partido,16:00,Primera División de Costa Rica,Estadio Ricardo Saprissa,401876830,858,Saprissa,https://a.espncdn.com/i/teamlogos/soccer/500/858.png,2057,Alajuelense,https://a.espncdn.com/i/teamlogos/soccer/500/2057.png,no,
