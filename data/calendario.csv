@@ -3,8 +3,6 @@ fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_loca
 2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-10-26,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-11-02,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-11-04,Puntarenas FC vs AD San Carlos,partido,18:00,Primera División de Costa Rica,Estadio Lito Pérez,401876825,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,no,
-2026-11-04,Escorpiones Belén vs Alajuelense,partido,20:00,Primera División de Costa Rica,Estadio Ricardo Saprissa,401876826,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,2057,Alajuelense,https://a.espncdn.com/i/teamlogos/soccer/500/2057.png,no,
 2026-11-05,Inter de San Carlos vs Cartaginés,partido,17:00,Primera División de Costa Rica,Estadio Carlos Ugalde Álvarez,401876889,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,no,
 2026-11-05,Herediano vs Saprissa,partido,20:00,Primera División de Costa Rica,Estadio Carlos Alvarado,401876827,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,858,Saprissa,https://a.espncdn.com/i/teamlogos/soccer/500/858.png,no,
 2026-11-07,AD San Carlos vs Pérez Zeledón,partido,18:00,Primera División de Costa Rica,Estadio Carlos Ugalde Álvarez,401876823,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,7234,Pérez Zeledón,https://a.espncdn.com/i/teamlogos/soccer/500/7234.png,no,
