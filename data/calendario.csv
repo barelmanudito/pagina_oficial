@@ -3,9 +3,6 @@ fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_loca
 2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-10-26,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-11-02,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-11-08,Cartaginés vs Escorpiones Belén,partido,11:00,Primera División de Costa Rica,"Estadio José Rafael ""Fello"" Meza Ivankovich",401876822,7239,Cartaginés,https://a.espncdn.com/i/teamlogos/soccer/500/7239.png,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,no,
-2026-11-08,Saprissa vs Puntarenas FC,partido,16:00,Primera División de Costa Rica,Estadio Ricardo Saprissa,401876821,858,Saprissa,https://a.espncdn.com/i/teamlogos/soccer/500/858.png,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,no,
-2026-11-08,Herediano vs Inter de San Carlos,partido,18:30,Primera División de Costa Rica,Estadio Carlos Alvarado,401876888,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,131790,Inter de San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/131790.png,no,
 2026-11-09,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-11-16,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-11-20,Escorpiones Belén vs AD San Carlos,partido,20:00,Primera División de Costa Rica,Estadio Rafael Bolaños,401876818,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,no,
