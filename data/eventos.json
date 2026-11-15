@@ -1,3 +1,12 @@
 {
-  "eventos": []
+  "eventos": [
+    {
+      "nombre": "test",
+      "fecha": "2026-11-17",
+      "hora": "",
+      "descripcion": "test",
+      "imagen": "assets/eventos/foto-7aa97dae2dc10abd.jpg",
+      "tipo": "evento"
+    }
+  ]
 }
