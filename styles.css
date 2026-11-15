@@ -2812,9 +2812,42 @@ a.social-link:focus-visible {
 .event-poster:focus-visible, .upcoming-controls button:focus-visible { outline: 3px solid #ffd777; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .events-track { scroll-behavior: auto; } }
 .moments-grid[hidden], #moments-empty[hidden] { display: none; }
-.moments-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; min-width: 0; }
-.moments-grid figure { margin: 0; min-width: 0; overflow: hidden; border-radius: 18px; background: #151515; }
+.moments-carousel { min-width: 0; }
+.moments-carousel[hidden], .moments-controls[hidden], .moments-controls button[hidden] { display: none; }
+.moments-grid { display: flex; gap: 16px; min-width: 0; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; padding: 4px 0 14px; scrollbar-color: var(--red) #202024; }
+.moments-grid figure { flex: 0 0 calc((100% - 16px) / 2); scroll-snap-align: start; margin: 0; min-width: 0; overflow: hidden; border-radius: 18px; background: #151515; }
+.moments-grid figure:only-child { flex-basis: 100%; }
 .moments-grid img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .moments-grid figcaption { padding: 12px 16px; color: #eee; }
-.moments-grid a:focus-visible { outline: 3px solid #ffcc77; outline-offset: -3px; }
-@media (max-width: 560px) { .moments-grid { grid-template-columns: 1fr; } }
+.moment-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+.moment-open:focus-visible { outline: 3px solid #ffcc77; outline-offset: -3px; }
+.moments-hint { color: var(--muted); font-size: .9rem; }
+.moments-controls { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.moments-controls button, .moment-close { min-width: 44px; min-height: 44px; border: 1px solid #e15065; border-radius: 24px; background: #a30c24; color: #fff; cursor: pointer; font: inherit; padding: .5rem 1rem; }
+.moments-controls button:focus-visible, .moment-close:focus-visible { outline: 3px solid #ffcc77; outline-offset: 3px; }
+.moment-dialog { width: min(1100px, 94vw); max-width: 94vw; max-height: 94dvh; padding: 0; border: 1px solid var(--line); border-radius: 20px; background: #101012; color: var(--white); overflow: auto; }
+.moment-dialog::backdrop { background: #000d; backdrop-filter: blur(6px); }
+.moment-dialog > img { display: block; width: 100%; height: min(68dvh, 760px); object-fit: contain; background: #050505; }
+.moment-close { position: absolute; top: 12px; right: 12px; z-index: 1; font-size: 1.5rem; background: #151515e8; }
+.moment-dialog-caption { padding: 16px 22px; }
+.moment-dialog-caption h2 { margin: 0; font-size: 1.25rem; }
+.moment-dialog-caption p { color: var(--muted); white-space: pre-line; }
+body.moment-viewer-open { overflow: hidden; }
+@media (max-width: 560px) { .moments-grid figure { flex-basis: 88%; } }
+/* Ofertas: la sección desaparece automáticamente cuando no hay descuentos. */
+.discounts-section { background: radial-gradient(ellipse at top left, #70101855, transparent 65%), #101012; }
+.discounts-section[hidden] { display: none; }
+.discounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 1.5rem; }
+.discount-card { overflow: hidden; border: 1px solid #f20b1855; border-radius: 1.25rem; background: #19191c; display: flex; flex-direction: column; }
+.discount-photo { position: relative; background: #0a0a0b; }
+.discount-photo img { width: 100%; height: 220px; object-fit: contain; display: block; }
+.discount-badge { position: absolute; top: 1rem; right: 1rem; padding: .45rem .85rem; border-radius: 2rem; background: var(--red); color: white; font-size: 1.3rem; font-weight: 900; }
+.discount-copy { padding: 1.5rem; display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
+.discount-copy h3 { font-size: 1.5rem; margin: .25rem 0 1rem; }
+.discount-prices { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; }
+.price-before { display: block; color: #c6c6cc; font-size: .8rem; font-weight: 500; }
+.price-now { display: block; color: #fff; }
+.discount-prices .price-now { font-size: 1.8rem; font-weight: 900; }
+.discount-saving { color: #ffcc75; font-weight: 700; }
+.discount-copy .button { margin-top: auto; }
+.menu-item-price:has(.price-now) { border-color: var(--red); }

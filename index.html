@@ -205,6 +205,14 @@
           </div>
         </section>
 
+        <section class="section discounts-section reveal" id="ofertas" aria-labelledby="discounts-title" hidden>
+          <div class="section-heading section-heading-light">
+            <div><p class="eyebrow">PROMOS DEL MANUDITO</p><h2 id="discounts-title">Más sabor, menos colones</h2></div>
+            <p>Tus favoritos a un precio que se disfruta. Elegí tu antojo y aprovechá el ahorro.</p>
+          </div>
+          <div class="discounts-grid" id="discounts-grid"></div>
+        </section>
+
         <section class="section story-section reveal" id="historia" aria-labelledby="story-title">
           <div class="story-number" aria-hidden="true">11</div>
           <div class="story-copy">
@@ -249,7 +257,15 @@
               El ambiente, la barra y las noches de partido. Así se vive El Manudito.
             </p>
           </div>
-          <div id="moments-grid" class="moments-grid" aria-label="Fotos de momentos del bar" hidden></div>
+          <div id="moments-carousel" class="moments-carousel" role="region" aria-roledescription="carrusel" aria-label="Momentos del Manudito" hidden>
+            <div class="moments-controls" id="moments-controls" hidden>
+              <button type="button" id="moments-prev" aria-label="Fotos anteriores">←</button>
+              <button type="button" id="moments-pause" aria-pressed="false">Pausar</button>
+              <button type="button" id="moments-next" aria-label="Fotos siguientes">→</button>
+            </div>
+            <p class="moments-hint">Tocá una foto para verla en grande.</p>
+            <div id="moments-grid" class="moments-grid" tabindex="0" aria-label="Fotos de momentos del bar" hidden></div>
+          </div>
           <div id="moments-empty" class="gallery-coming" role="img" aria-label="Próximamente, galería de Bar El Manudito">
             <img src="assets/icono.webp" alt="" width="150" height="170" />
             <div>
@@ -329,6 +345,20 @@
       <span id="floating-count">0</span>
       Ver mi selección
     </button>
+
+    <dialog class="moment-dialog" id="moment-dialog" aria-labelledby="moment-title" aria-describedby="moment-description">
+      <button class="moment-close" id="moment-close" type="button" aria-label="Cerrar foto ampliada" autofocus>×</button>
+      <img id="moment-photo" alt="" />
+      <div class="moment-dialog-caption">
+        <h2 id="moment-title"></h2>
+        <p id="moment-description"></p>
+        <div class="moments-controls">
+          <button id="moment-prev" type="button" aria-label="Foto anterior">←</button>
+          <span id="moment-counter" aria-live="polite"></span>
+          <button id="moment-next" type="button" aria-label="Foto siguiente">→</button>
+        </div>
+      </div>
+    </dialog>
 
     <dialog class="order-dialog" id="order-dialog" aria-labelledby="order-title">
       <div class="dialog-header">

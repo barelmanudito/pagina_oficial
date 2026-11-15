@@ -98,6 +98,15 @@
                       "min": 0
                     },
                     {
+                      "name": "discountPrice",
+                      "label": "Precio de oferta en colones",
+                      "widget": "number",
+                      "value_type": "int",
+                      "min": 1,
+                      "required": false,
+                      "hint": "Opcional. Debe ser menor al precio normal. Borrarlo para quitar la oferta."
+                    },
+                    {
                       "name": "description",
                       "label": "Descripci?n",
                       "widget": "text",

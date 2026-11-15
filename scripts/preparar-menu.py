@@ -1,5 +1,6 @@
 """Valida los productos y genera los datos compartidos por ambas cartas."""
 import json
+import math
 import re
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -20,6 +21,8 @@ def build_menu(root=ROOT):
             ids.add(item["id"])
             assert item["name"].strip(), "Falta el nombre de un producto"
             assert type(item["price"]) in (int, float) and item["price"] >= 0, "Precio inválido"
+            discount = item.get("discountPrice")
+            assert discount is None or (type(discount) in (int, float) and math.isfinite(discount) and 0 < discount < item["price"]), "El precio de oferta debe ser positivo y menor al precio normal"
             photo = item.get("photo", "")
             assert not photo or (not urlsplit(photo).scheme and not photo.startswith("//") and ".." not in photo.split("/")), "La foto debe ser un archivo del sitio"
     output = "// Generado: editar data/menu.json desde el administrador.\nwindow.menuContent = "

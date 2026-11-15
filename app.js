@@ -1,5 +1,7 @@
 // Datos generados desde data/menu.json por scripts/preparar-menu.py.
 const placeholderPhoto = "assets/productos/imagen-pendiente.svg";
+const hasDiscount = (item) => Number.isFinite(item.discountPrice) && item.discountPrice > 0 && item.discountPrice < item.price;
+const sellingPrice = (item) => hasDiscount(item) ? item.discountPrice : item.price;
 const menuItems = window.menuContent.groups.flatMap(({ category, label, items }) =>
   items.filter((item) => item.available !== false).map((item) => ({
     ...item, category, categoryLabel: label, photo: item.photo || placeholderPhoto,
@@ -17,6 +19,36 @@ const money = new Intl.NumberFormat("es-CR", {
   currency: "CRC",
   maximumFractionDigits: 0,
 });
+
+function priceMarkup(item) {
+  if (!hasDiscount(item)) return money.format(item.price);
+  return `<span class="price-before">Antes <del>${money.format(item.price)}</del></span><strong class="price-now">Ahora ${money.format(item.discountPrice)}</strong>`;
+}
+
+function renderDiscounts() {
+  const section = document.querySelector("#ofertas");
+  if (!section) return;
+  const items = menuItems.filter(hasDiscount);
+  section.hidden = items.length === 0;
+  document.querySelector("#discounts-grid").innerHTML = items.map((item) => {
+    const saving = item.price - item.discountPrice;
+    const percent = Math.floor(saving / item.price * 100);
+    return `<article class="discount-card">
+      <div class="discount-photo"><img src="${escapeHtml(item.photo)}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" />
+      <span class="discount-badge">${percent > 0 ? `−${percent}%` : 'Oferta'}</span></div>
+      <div class="discount-copy"><p class="eyebrow">${escapeHtml(item.categoryLabel)}</p>
+      <h3>${escapeHtml(item.name)}</h3>
+      ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
+      <div class="discount-prices">${priceMarkup(item)}</div>
+      <p class="discount-saving">Ahorrás ${money.format(saving)} por unidad</p>
+      <button class="button button-primary" type="button" data-add="${escapeHtml(item.id)}" aria-label="Agregar ${escapeHtml(item.name)} en oferta a mi selección">Lo quiero +</button></div>
+    </article>`;
+  }).join("");
+  section.querySelectorAll("img").forEach((photo) => photo.addEventListener("error", () => {
+    if (photo.getAttribute("src") !== placeholderPhoto) photo.src = placeholderPhoto;
+  }));
+}
+renderDiscounts();
 
 menuGrid?.addEventListener("error", (event) => {
   const photo = event.target.closest?.(".menu-item-photo");
@@ -43,7 +75,7 @@ function updateJar(card, item) {
   const description = card.querySelector(".menu-item-description");
   description.textContent = item.description;
   description.hidden = !item.description;
-  card.querySelector(".menu-item-price").textContent = money.format(item.price);
+  card.querySelector(".menu-item-price").innerHTML = priceMarkup(item);
   const button = card.querySelector(".add-item");
   button.dataset.add = item.id;
   button.setAttribute("aria-label", `Agregar ${escapeHtml(item.name)} a mi selección`);
@@ -75,7 +107,7 @@ function renderMenu(category = "todos") {
           </div>
           <p class="menu-item-description"${item.description ? "" : " hidden"}>${escapeHtml(item.description)}</p>
           <div class="menu-item-footer">
-            <span class="menu-item-price">${money.format(item.price)}</span>
+            <span class="menu-item-price">${priceMarkup(item)}</span>
             <button class="add-item" type="button" data-add="${escapeHtml(item.id)}" aria-label="Agregar ${escapeHtml(item.name)} a mi selección">+</button>
           </div>
         </div>
@@ -120,15 +152,19 @@ const desktopMainPage = !document.body.classList.contains("menu-only-page")
   && window.matchMedia("(min-width: 721px)").matches;
 renderMenu(desktopMainPage ? "cervezas" : "todos");
 
-menuGrid.addEventListener("click", (event) => {
+function addProduct(event) {
   const button = event.target.closest("[data-add]");
   if (!button) return;
   const id = button.dataset.add;
+  if (!menuItems.some((item) => item.id === id)) return;
   order.set(id, (order.get(id) || 0) + 1);
   updateOrderSummary();
   button.textContent = "✓";
-  window.setTimeout(() => { button.textContent = "+"; }, 650);
-});
+  const label = button.closest("#ofertas") ? "Lo quiero +" : "+";
+  window.setTimeout(() => { button.textContent = label; }, 650);
+}
+menuGrid.addEventListener("click", addProduct);
+document.querySelector("#discounts-grid")?.addEventListener("click", addProduct);
 
 const orderDialog = document.querySelector("#order-dialog");
 const orderList = document.querySelector("#order-list");
@@ -168,7 +204,7 @@ function renderOrder() {
     .map(({ item, quantity }) => `
       <div class="order-row">
         <strong>${escapeHtml(item.name)}</strong>
-        <p>${money.format(item.price * quantity)}</p>
+        <p>${money.format(sellingPrice(item) * quantity)}</p>
         <div class="quantity-controls" aria-label="Cantidad de ${escapeHtml(item.name)}">
           <button type="button" data-change="${escapeHtml(item.id)}" data-delta="-1" aria-label="Quitar uno">−</button>
           <span>${quantity}</span>
@@ -178,7 +214,7 @@ function renderOrder() {
     `)
     .join("");
 
-  const total = rows.reduce((sum, { item, quantity }) => sum + item.price * quantity, 0);
+  const total = rows.reduce((sum, { item, quantity }) => sum + sellingPrice(item) * quantity, 0);
   orderTotal.textContent = money.format(total);
   copyOrderButton.disabled = false;
 }
@@ -222,10 +258,10 @@ copyOrderButton.addEventListener("click", async () => {
   const rows = [...order.entries()]
     .map(([id, quantity]) => ({ item: menuItems.find((entry) => entry.id === id), quantity }))
     .filter(({ item }) => item);
-  const total = rows.reduce((sum, { item, quantity }) => sum + item.price * quantity, 0);
+  const total = rows.reduce((sum, { item, quantity }) => sum + sellingPrice(item) * quantity, 0);
   const text = [
     "Mi selección — Bar El Manudito",
-    ...rows.map(({ item, quantity }) => `${quantity} × ${escapeHtml(item.name)} — ${money.format(item.price * quantity)}`),
+    ...rows.map(({ item, quantity }) => `${quantity} × ${escapeHtml(item.name)} — ${money.format(sellingPrice(item) * quantity)}`),
     `Total estimado: ${money.format(total)}`,
   ].join("\n");
 
@@ -257,13 +293,17 @@ async function loadMoments() {
     const response = await fetch("data/galeria.json", { cache: "no-store" });
     if (!response.ok) return;
     const data = await response.json();
+    const moments = [];
     for (const moment of data.momentos || []) {
       if (moment.visible === false || !moment.imagen?.startsWith("assets/") || moment.imagen.includes("..")) continue;
       const figure = document.createElement("figure");
-      const link = document.createElement("a");
-      link.href = moment.imagen;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
+      const link = document.createElement("button");
+      link.type = "button";
+      link.className = "moment-open";
+      link.dataset.momentIndex = moments.length;
+      link.setAttribute("aria-label", `Ampliar foto: ${moment.titulo || "Momento en El Manudito"}`);
+      link.setAttribute("aria-haspopup", "dialog");
+      moments.push(moment);
       const image = document.createElement("img");
       image.src = moment.imagen;
       image.alt = moment.descripcion || moment.titulo || "Momento en El Manudito";
@@ -277,9 +317,97 @@ async function loadMoments() {
     }
     grid.hidden = !grid.childElementCount;
     document.querySelector("#moments-empty").hidden = !!grid.childElementCount;
+    document.querySelector("#moments-carousel").hidden = !moments.length;
+    if (moments.length) setupMomentsCarousel(grid, moments);
   } catch (error) { console.warn("No se pudo cargar la galería."); }
 }
 loadMoments();
+function setupMomentsCarousel(track, moments) {
+  const carousel = document.querySelector("#moments-carousel");
+  const controls = document.querySelector("#moments-controls");
+  const pauseButton = document.querySelector("#moments-pause");
+  const dialog = document.querySelector("#moment-dialog");
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let current = 0;
+  let paused = false;
+  let hovering = false;
+  let inView = false;
+  let timer;
+  const overflows = () => track.scrollWidth > track.clientWidth + 2;
+  function move(direction) {
+    const max = track.scrollWidth - track.clientWidth;
+    const step = track.firstElementChild.getBoundingClientRect().width + 16;
+    let next = track.scrollLeft + direction * step;
+    if (direction > 0 && track.scrollLeft >= max - 2) next = 0;
+    if (direction < 0 && track.scrollLeft <= 2) next = max;
+    track.scrollTo({ left: Math.max(0, Math.min(max, next)), behavior: motion.matches ? "instant" : "smooth" });
+  }
+  function syncPlayback() {
+    clearInterval(timer);
+    const overflow = overflows();
+    controls.hidden = !overflow;
+    pauseButton.hidden = motion.matches;
+    if (overflow && !paused && !hovering && inView && !document.hidden && !dialog.open &&
+        !motion.matches && !carousel.contains(document.activeElement)) {
+      timer = window.setInterval(() => move(1), 4500);
+    }
+  }
+  document.querySelector("#moments-prev").addEventListener("click", () => move(-1));
+  document.querySelector("#moments-next").addEventListener("click", () => move(1));
+  pauseButton.addEventListener("click", () => {
+    paused = !paused;
+    pauseButton.textContent = paused ? "Reanudar" : "Pausar";
+    pauseButton.setAttribute("aria-pressed", String(paused));
+    syncPlayback();
+  });
+  carousel.addEventListener("mouseenter", () => { hovering = true; syncPlayback(); });
+  carousel.addEventListener("mouseleave", () => { hovering = false; syncPlayback(); });
+  carousel.addEventListener("focusin", syncPlayback);
+  carousel.addEventListener("focusout", () => window.setTimeout(syncPlayback, 0));
+  track.addEventListener("pointerdown", () => clearInterval(timer));
+  track.addEventListener("pointerup", syncPlayback);
+  track.addEventListener("pointercancel", syncPlayback);
+  document.addEventListener("visibilitychange", syncPlayback);
+  motion.addEventListener("change", syncPlayback);
+  new ResizeObserver(syncPlayback).observe(track);
+  new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; syncPlayback(); }).observe(carousel);
+
+  function showMoment(index) {
+    current = (index + moments.length) % moments.length;
+    const moment = moments[current];
+    const photo = document.querySelector("#moment-photo");
+    photo.src = moment.imagen;
+    photo.alt = moment.descripcion || moment.titulo || "Momento en El Manudito";
+    document.querySelector("#moment-title").textContent = moment.titulo || "Momento en El Manudito";
+    document.querySelector("#moment-description").textContent = moment.descripcion || "";
+    document.querySelector("#moment-counter").textContent = `${current + 1} / ${moments.length}`;
+    document.querySelector("#moment-prev").hidden = moments.length < 2;
+    document.querySelector("#moment-next").hidden = moments.length < 2;
+  }
+  track.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-moment-index]");
+    if (!button) return;
+    showMoment(Number(button.dataset.momentIndex));
+    dialog.showModal();
+    document.body.classList.add("moment-viewer-open");
+    syncPlayback();
+  });
+  document.querySelector("#moment-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+  dialog.addEventListener("close", () => {
+    document.body.classList.remove("moment-viewer-open");
+    syncPlayback();
+  });
+  document.querySelector("#moment-prev").addEventListener("click", () => showMoment(current - 1));
+  document.querySelector("#moment-next").addEventListener("click", () => showMoment(current + 1));
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      showMoment(current + (event.key === "ArrowRight" ? 1 : -1));
+    }
+  });
+  syncPlayback();
+}
 const calendarGrid = document.querySelector("#calendar-grid");
 const eventTag = document.querySelector("#event-tag");
 const eventDetail = document.querySelector("#event-detail");

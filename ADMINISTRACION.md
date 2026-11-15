@@ -96,3 +96,21 @@ Publicar un evento con foto el día de un partido; comprobar ambos en el calenda
 Cambiar precio y foto de un producto y verificar portada y QR. Ocultarlo y volverlo
 a habilitar. Borrar el evento y comprobar que no reaparece tras ejecutar el Action.
 Verificar que una cuenta sin permisos no pueda publicar.
+
+## Ofertas de productos
+
+El precio normal (`price`) se conserva. El campo opcional `discountPrice` define
+el precio de oferta: debe ser mayor que cero y menor que el normal. Borrarlo
+quita la oferta. Los productos no disponibles no aparecen en las promociones.
+La portada destaca las ofertas debajo de Eventos con foto, Antes/Ahora, porcentaje
+y ahorro por unidad. La carta QR y la selección también usan el precio de oferta.
+No se han activado descuentos reales: se eligen desde la app o el administrador.
+
+## Galería de Momentos
+
+Las fotos visibles se muestran en un carrusel con desplazamiento táctil y flechas.
+Si hay más fotos de las que caben, avanza automáticamente cada 4,5 segundos;
+se puede pausar y respeta la preferencia de movimiento reducido del dispositivo.
+Al seleccionar una foto se abre ampliada dentro de la página, con navegación
+entre imágenes. Se cierra con el botón de cierre, Escape o el fondo exterior.
+Sin fotos visibles se conserva el aviso de próxima galería.
