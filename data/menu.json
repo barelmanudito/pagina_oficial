@@ -7,7 +7,7 @@
         {
           "id": "ceviche",
           "name": "Ceviche",
-          "price": 3400,
+          "price": 5000,
           "description": "",
           "photo": "assets/productos/imagen-pendiente.svg",
           "available": true
