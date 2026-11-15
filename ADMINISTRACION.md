@@ -49,6 +49,20 @@ archivos de una página pública son visibles para los visitantes.
 
 ## Cómo funciona
 
+La aplicación de Windows mantiene una copia local del repositorio por HTTPS y
+comprueba actualizaciones al abrir. Las vistas previas usan esas fotos y conservan
+los borradores pendientes. No necesita Git instalado.
+
+La página muestra un carrusel con los próximos eventos manuales; se oculta por
+completo cuando no hay eventos futuros. Los eventos sin foto tienen una tarjeta
+con su nombre y fecha.
+
+El calendario deportivo cubre el mes actual completo en Costa Rica, más 15 días
+anteriores al primer día y 15 posteriores al último. Incluye partidos jugados,
+programados y resultados de Primera División y de la Selección mayor masculina
+de Costa Rica. Las consultas de selección se filtran por el equipo 214 de ESPN.
+Los datos dependen de los encuentros que publique la fuente deportiva.
+
 - `data/menu.json`: única fuente del menú. El Action valida los datos y genera
   `menu-data.js`, compartido por la portada y la carta QR.
 - `data/eventos.json`: única fuente de eventos manuales. Se migró el Excel inicial;

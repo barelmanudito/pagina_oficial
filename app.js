@@ -297,7 +297,7 @@ function readCalendar(text) {
   const optional = [
     "hora", "descripcion", "estadio", "id_partido", "id_local", "local",
     "escudo_local", "id_visitante", "visitante", "escudo_visitante",
-    "en_morera", "imagen",
+    "en_morera", "imagen", "estado", "marcador_local", "marcador_visitante",
   ];
   if (!headings || required.some((heading) => !headings.map((value) => value.toLowerCase()).includes(heading))) {
     throw new Error("Faltan columnas en calendario.csv");
@@ -335,6 +335,9 @@ function readCalendar(text) {
       isMorera: ["si", "sí", "true", "1"].includes(moreraValue)
         || venue.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("alejandro morera soto"),
       image: value("imagen"),
+      status: value("estado"),
+      homeScore: value("marcador_local"),
+      awayScore: value("marcador_visitante"),
     };
     const current = events.get(key) || [];
     if (type === "cerrado") events.set(key, [entry]);
@@ -360,10 +363,59 @@ async function loadCalendar() {
     if (!response.ok) throw new Error(`Error ${response.status}`);
     calendarEvents = readCalendar(await response.text());
     renderCalendar();
+    renderEventCarousel();
     if (!calendarEvents.size) calendarMessage("Próximas actividades", "Todavía no hay eventos ni cierres confirmados.");
   } catch (error) {
     calendarMessage("Agenda no disponible", "No se pudo leer el archivo de calendario. Revisá calendario.csv o abrí la página desde un servidor local.");
     console.warn("Calendario no disponible:", error);
+  }
+}
+
+function renderEventCarousel() {
+  const section = document.querySelector("#upcoming-events");
+  if (!section) return;
+  const track = document.querySelector("#events-track");
+  track.replaceChildren();
+  const now = Date.now();
+  const upcoming = [...calendarEvents.entries()].flatMap(([date, events]) =>
+    events.filter((event) => event.type === "evento" &&
+      new Date(`${date}T${event.time || "23:59"}:00-06:00`).getTime() >= now
+    ).map((event) => ({ ...event, date }))
+  ).sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`));
+  section.hidden = upcoming.length === 0;
+  for (const event of upcoming) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "event-poster";
+    card.setAttribute("aria-label", `Ver ${event.title}, ${event.date}`);
+    if (event.image) {
+      const image = createEventImage(event);
+      image.alt = event.title;
+      card.append(image);
+    }
+    const copy = document.createElement("span");
+    copy.className = "event-poster-copy";
+    const when = document.createElement("span");
+    when.textContent = new Intl.DateTimeFormat("es-CR", { day: "numeric", month: "long", timeZone: "America/Costa_Rica" })
+      .format(new Date(`${event.date}T12:00:00-06:00`)) + (event.time ? ` · ${event.time}` : "");
+    const title = document.createElement("strong");
+    title.textContent = event.title;
+    copy.append(when, title);
+    card.append(copy);
+    card.addEventListener("click", () => {
+      const [year, month] = event.date.split("-").map(Number);
+      visibleMonth = new Date(year, month - 1, 1);
+      renderCalendar();
+      const day = calendarGrid.querySelector(`[data-date="${event.date}"]`);
+      if (day) { showEvent(event.date, day); day.focus({ preventScroll: true }); }
+      eventDetail.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "nearest" });
+    });
+    track.append(card);
+  }
+  for (const [id, direction] of [["events-prev", -1], ["events-next", 1]]) {
+    const button = document.getElementById(id);
+    button.hidden = upcoming.length < 2;
+    button.onclick = () => track.scrollBy({ left: direction * ((track.firstElementChild?.getBoundingClientRect().width || 300) + 18), behavior: "smooth" });
   }
 }
 
@@ -420,7 +472,7 @@ function createMatchVisual(event, compact = false) {
 
   const versus = document.createElement("strong");
   versus.className = "match-versus";
-  versus.textContent = "VS";
+  versus.textContent = event.homeScore !== undefined && event.homeScore !== "" ? `${event.homeScore} – ${event.awayScore}` : "VS";
   visual.append(team(event.home, event.homeLogo), versus, team(event.away, event.awayLogo));
   return visual;
 }
@@ -443,6 +495,7 @@ function eventMetaText(event) {
   if (event.time) parts.push(event.time);
   else parts.push(event.type === "cerrado" ? "Sin servicio" : "Horario por confirmar");
   if (event.venue) parts.push(event.venue);
+  if (event.status) parts.push(event.status);
   return parts.join(" · ");
 }
 
@@ -484,7 +537,7 @@ function renderResults(results) {
   if (!results.length) {
     const message = document.createElement("p");
     message.className = "results-message";
-    message.textContent = "Todavía no hay resultados disponibles de los últimos 30 días.";
+    message.textContent = "Todavía no hay resultados disponibles para este período.";
     resultsGrid.append(message);
     return;
   }
@@ -574,7 +627,7 @@ function showEvent(key, dayButton) {
       ? "DÍA SIN SERVICIO"
       : event.isMorera
         ? "PARTIDO EN CASA"
-        : event.type === "partido" ? "PARTIDO DE PRIMERA" : "EVENTO";
+        : event.type === "partido" ? (event.description.includes("Selección") ? "SELECCIÓN DE COSTA RICA" : "PARTIDO DE PRIMERA") : "EVENTO";
     eventName.textContent = event.title;
     renderEventVisual(event);
     eventDescription.textContent = event.description || (event.type === "cerrado" ? "El bar permanecerá cerrado este día." : event.type === "partido" ? "Viví la Primera División en Bar El Manudito." : "Te esperamos en el bar.");
@@ -631,6 +684,7 @@ function renderCalendar() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "calendar-day";
+    button.dataset.date = key;
     button.textContent = day;
     button.setAttribute("aria-label", events?.length ? `${day}: ${events.map((event) => event.title).join(", ")}` : `${day} de ${monthNames[month]}`);
     if (!events?.length) button.disabled = true;
