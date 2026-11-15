@@ -1,5 +1,10 @@
 # Editar el calendario y las fotos del menú
 
+> **Actualización:** la administración ahora se prepara con Decap CMS. Seguí
+> [ADMINISTRACION.md](ADMINISTRACION.md). El menú se edita en `data/menu.json`
+> y los eventos en `data/eventos.json`; `menu-photos.js`, Excel y las instrucciones
+> de edición manual del CSV que siguen son referencias del sistema anterior.
+
 ## Calendario
 
 Abrí `data/calendario.csv` con un editor de texto o Excel. La primera fila es el encabezado; agregá una fila por actividad, partido o cierre.

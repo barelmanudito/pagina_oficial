@@ -1,0 +1,216 @@
+{
+  "backend": {
+    "name": "github",
+    "repo": "barelmanudito/pagina_oficial",
+    "branch": "main",
+    "base_url": "https://CONFIGURAR-AUTENTICACION.invalid",
+    "auth_endpoint": "auth"
+  },
+  "locale": "es",
+  "media_folder": "assets/productos",
+  "public_folder": "assets/productos",
+  "publish_mode": "simple",
+  "editor": {
+    "preview": false
+  },
+  "collections": [
+    {
+      "name": "contenido",
+      "label": "Administrar contenido",
+      "files": [
+        {
+          "name": "menu",
+          "label": "Productos y categor?as",
+          "file": "data/menu.json",
+          "fields": [
+            {
+              "name": "groups",
+              "label": "Grupos del men?",
+              "widget": "list",
+              "summary": "{{fields.label}}",
+              "fields": [
+                {
+                  "name": "label",
+                  "label": "Nombre del grupo",
+                  "widget": "string"
+                },
+                {
+                  "name": "category",
+                  "label": "Secci?n",
+                  "widget": "select",
+                  "options": [
+                    {
+                      "label": "Bocas",
+                      "value": "bocas"
+                    },
+                    {
+                      "label": "Platos fuertes",
+                      "value": "fuertes"
+                    },
+                    {
+                      "label": "Especialidades",
+                      "value": "especialidades"
+                    },
+                    {
+                      "label": "Cervezas",
+                      "value": "cervezas"
+                    },
+                    {
+                      "label": "C?cteles",
+                      "value": "cocteles"
+                    },
+                    {
+                      "label": "Sin alcohol",
+                      "value": "sin-alcohol"
+                    },
+                    {
+                      "label": "Combos",
+                      "value": "combos"
+                    }
+                  ]
+                },
+                {
+                  "name": "items",
+                  "label": "Productos",
+                  "widget": "list",
+                  "summary": "{{fields.name}} ? ?{{fields.price}}",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "label": "Identificador ?nico",
+                      "widget": "string",
+                      "hint": "Usar letras min?sculas, n?meros y guiones. Ejemplo: hamburguesa-especial. No cambiar en productos existentes.",
+                      "pattern": [
+                        "^[a-z0-9-]+$",
+                        "Us? min?sculas, n?meros y guiones."
+                      ]
+                    },
+                    {
+                      "name": "name",
+                      "label": "Nombre",
+                      "widget": "string"
+                    },
+                    {
+                      "name": "price",
+                      "label": "Precio en colones",
+                      "widget": "number",
+                      "value_type": "int",
+                      "min": 0
+                    },
+                    {
+                      "name": "description",
+                      "label": "Descripci?n",
+                      "widget": "text",
+                      "required": false
+                    },
+                    {
+                      "name": "photo",
+                      "label": "Foto",
+                      "widget": "image",
+                      "required": false
+                    },
+                    {
+                      "name": "available",
+                      "label": "Disponible",
+                      "widget": "boolean",
+                      "default": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "eventos",
+          "label": "Eventos y cierres",
+          "file": "data/eventos.json",
+          "fields": [
+            {
+              "name": "eventos",
+              "label": "Eventos",
+              "widget": "list",
+              "summary": "{{fields.fecha}} ? {{fields.nombre}}",
+              "fields": [
+                {
+                  "name": "nombre",
+                  "label": "Nombre",
+                  "widget": "string"
+                },
+                {
+                  "name": "fecha",
+                  "label": "Fecha",
+                  "widget": "datetime",
+                  "format": "YYYY-MM-DD",
+                  "date_format": "DD/MM/YYYY",
+                  "time_format": false,
+                  "picker_utc": true
+                },
+                {
+                  "name": "tipo",
+                  "label": "Tipo",
+                  "widget": "select",
+                  "options": [
+                    {
+                      "label": "Evento",
+                      "value": "evento"
+                    },
+                    {
+                      "label": "Cierre",
+                      "value": "cerrado"
+                    }
+                  ],
+                  "default": "evento"
+                },
+                {
+                  "name": "hora",
+                  "label": "Hora (24 horas)",
+                  "widget": "string",
+                  "required": false,
+                  "hint": "Ejemplo: 20:00. Dejar vac?o si todav?a no est? confirmada.",
+                  "pattern": [
+                    "^$|^([01][0-9]|2[0-3]):[0-5][0-9]$",
+                    "Us? HH:MM, por ejemplo 20:00."
+                  ]
+                },
+                {
+                  "name": "descripcion",
+                  "label": "Descripci?n",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "imagen",
+                  "label": "Imagen del evento",
+                  "widget": "image",
+                  "required": false,
+                  "media_folder": "/assets/eventos",
+                  "public_folder": "assets/eventos"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "calendario",
+          "label": "Configuraci?n del calendario",
+          "file": "data/configuracion-calendario.json",
+          "fields": [
+            {
+              "name": "cerrar_lunes",
+              "label": "Cerrar autom?ticamente los lunes",
+              "widget": "boolean",
+              "default": true
+            },
+            {
+              "name": "imagen_cerrado",
+              "label": "Imagen de cierre",
+              "widget": "image",
+              "required": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

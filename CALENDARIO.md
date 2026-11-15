@@ -1,5 +1,10 @@
 # Calendario, eventos y resultados
 
+> **Actualización:** consultá [ADMINISTRACION.md](ADMINISTRACION.md). La fuente
+> activa de eventos es `data/eventos.json`, administrada por Decap CMS. El Excel
+> descrito abajo se conserva como archivo histórico; no volver a importarlo sobre
+> el calendario generado.
+
 ## Archivo que debe editarse
 
 Los eventos manuales se administran en `data/eventos.xlsx`, hoja `Eventos`.

@@ -37,18 +37,34 @@ jobs:
         with:
           node-version: 24
 
-      - name: Actualizar partidos de Primera División
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Preparar menu
+        run: python scripts/preparar-menu.py
+
+      - name: Comprobar calendario sin consultar ESPN
+        run: node scripts/probar-calendario.mjs
+
+      - name: Combinar eventos y partidos guardados
+        if: github.event_name == 'push'
+        run: node scripts/actualizar-partidos.mjs --sin-consultar-partidos
+
+      - name: Consultar partidos de ESPN
+        if: github.event_name != 'push'
         run: node scripts/actualizar-partidos.mjs
 
       - name: Guardar calendario actualizado
         run: |
-          if git diff --quiet -- data/calendario.csv; then
+          if git diff --quiet -- data/calendario.csv data/resultados.csv menu-data.js; then
             echo "El calendario ya estaba actualizado."
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-            git add data/calendario.csv
+            git add data/calendario.csv data/resultados.csv menu-data.js
             git commit -m "Actualizar partidos de Primera División"
             git push
           fi

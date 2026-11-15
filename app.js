@@ -1,126 +1,12 @@
-// Productos y precios transcritos de la carta del bar facilitada por el propietario.
-// La promoción de alitas con Tropical se excluye por solicitud expresa.
-const menuGroups = [
-  {
-    category: "bocas", label: "Bocas", items: [
-      ["ceviche", "Ceviche", 3400],
-      ["chifrijo", "Chifrijo", 4400],
-      ["frijoles-tiernos", "Frijoles tiernos", 3400],
-      ["gallo-chorizo", "Gallo de chorizo", 3200],
-      ["gallo-pescado", "Gallo de pescado", 3400],
-      ["gallo-salchichon", "Gallo de salchichón", 3200],
-      ["garbanzos-pollo", "Garbanzos con pollo", 3500],
-      ["jalapenos-poppers", "Jalapeños poppers", 3700],
-      ["mini-taquitos", "Mini taquitos", 2700],
-      ["palitos-queso", "Palitos de queso", 3500],
-      ["taco-grande", "Taco grande", 3200],
-      ["yuca", "Yuca", 3200],
-    ],
-  },
-  {
-    category: "fuertes", label: "Arroces", items: [
-      ["arroz-pollo", "Arroz con pollo", 4200],
-      ["arroz-camarones", "Arroz con camarones", 5000],
-      ["arroz-ranchero", "Arroz ranchero", 5000],
-    ],
-  },
-  {
-    category: "fuertes", label: "Carnes", items: [
-      ["bistec-encebollado", "Bistec encebollado", 4700],
-      ["costilla", "Costilla", 4900],
-      ["fajitas-res-jalapena", "Fajitas de res a la jalapeña", 5000],
-      ["fajitas-mixtas", "Fajitas mixtas", 5000],
-      ["lomo-suizo", "Lomo suizo", 5200],
-      ["mexicana", "Mexicana", 4700],
-      ["sopa-carne", "Sopa de carne", 3500],
-    ],
-  },
-  {
-    category: "fuertes", label: "Pollo", items: [
-      ["alitas-papas", "Alitas con papas", 4700],
-      ["dedos-pollo", "Dedos de pollo empanizado", 5000],
-      ["fajitas-pollo", "Fajitas de pollo", 4800],
-      ["pechuga-plancha", "Pechuga a la plancha", 5000],
-      ["pechuga-gratinada", "Pechuga gratinada", 5200],
-      ["sopa-pollo", "Sopa de pollo", 3500],
-    ],
-  },
-  {
-    category: "fuertes", label: "Pescado", items: [
-      ["camarones-empanizados", "Camarones empanizados", 5000],
-      ["dedos-pescado", "Dedos de pescado empanizado", 5000],
-      ["filete-plancha", "Filete de pescado a la plancha", 4700],
-      ["filete-empanizado", "Filete de pescado empanizado", 4700],
-    ],
-  },
-  {
-    category: "especialidades", label: "Especialidades", items: [
-      ["tacos-birria", "Tacos de birria", 6000],
-      ["chile-relleno", "Chile relleno", 3800],
-      ["papas-bravas", "Papas bravas", 4000],
-      ["gallo-giba", "Gallo de giba", 5000],
-      ["gallo-morcilla", "Gallo de morcilla", 3500],
-      ["nachos", "Nachos", 5500],
-      ["new-york-steak", "New York Steak (350 g)", 9000],
-      ["rib-eye", "Rib Eye (350 g)", 9000],
-      ["churrasco", "Churrasco", 8000],
-      ["entrana", "Entraña", 8000],
-      ["pata-salsa", "Pata en salsa", 3200],
-      ["pataconten", "Pataconten", 5500],
-      ["salchipapas", "Salchipapas", 4000],
-      ["sopa-azteca", "Sopa azteca", 3500],
-      ["sopa-negra", "Sopa negra con huevo", 3500],
-    ],
-  },
-  {
-    category: "cervezas", label: "Cervezas nacionales", items: [
-      ["imperial", "Imperial", 1500, "Original, Silver, Light, Ultra o Cero · 350 ml"],
-      ["pilsen", "Pilsen", 1500, "Original o 6.0 · 350 ml"],
-    ],
-  },
-  {
-    category: "cervezas", label: "Cervezas prémium", items: [
-      ["bavaria", "Bavaria", 1600, "Master, Gold o Light · 355 ml"],
-      ["heineken", "Heineken", 1600, "Original o Cero · 355 ml"],
-      ["sol", "Sol", 1600, "350 ml"],
-    ],
-  },
-  {
-    category: "cocteles", label: "Cócteles y tragos", items: [
-      ["smirnoff", "Smirnoff", 1800, "Guaraná, Black, Green o Red · 350 ml"],
-      ["adan-eva", "Adán y Eva", 1600, "Frutos rojos, maracuyá piña, Gin & Tonic, Moscow Mule u Orange Spritz"],
-      ["copa-sangria", "Copa de sangría", 4000],
-      ["gin-tonic", "Gin Tonic", 4000],
-    ],
-  },
-  {
-    category: "sin-alcohol", label: "Refrescos", items: [
-      ["pepsi-350", "Pepsi 350 ml", 1500, "Original o Zero"],
-      ["pepsi-600", "Pepsi 600 ml", 1500, "Original o Zero"],
-      ["evervess", "Evervess", 1500, "Gin, soda o agua mineral · 350 ml"],
-      ["tropical-355", "Tropical 355 ml", 1500, "Blanco arándanos, frutas melocotón o blanco frutas tropicales"],
-      ["tropical-500", "Tropical 500 ml", 1500, "Blanco arándanos, limón, melocotón o blanco frutas tropicales"],
-      ["maxxx-energy", "Maxxx Energy", 2200, "Guaraná · 350 ml"],
-      ["agua-cristal", "Agua Cristal", 1000, "600 ml"],
-      ["vitaloe", "Vitaloe", 2000],
-      ["otras-bebidas", "Otras bebidas", 1500, "Coca Cola, soda o Gin"],
-    ],
-  },
-  {
-    category: "combos", label: "Combos", items: [
-      ["chifrijo-pepsi", "Chifrijo + Pepsi", 5700],
-      ["baldazo-cervecero", "Baldazo cervecero", 7500, "6 cervezas por el precio de 5"],
-    ],
-  },
-];
-
+// Datos generados desde data/menu.json por scripts/preparar-menu.py.
 const placeholderPhoto = "assets/productos/imagen-pendiente.svg";
-const menuItems = menuGroups.flatMap(({ category, label, items }) =>
-  items.map(([id, name, price, description = ""]) => ({
-    id, name, price, description, category, categoryLabel: label,
-    photo: menuPhotos[id] || placeholderPhoto,
+const menuItems = window.menuContent.groups.flatMap(({ category, label, items }) =>
+  items.filter((item) => item.available !== false).map((item) => ({
+    ...item, category, categoryLabel: label, photo: item.photo || placeholderPhoto,
   }))
 );
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 const menuGrid = document.querySelector("#menu-grid");
 const menuTabs = [...document.querySelectorAll(".menu-tab")];
@@ -160,7 +46,7 @@ function updateJar(card, item) {
   card.querySelector(".menu-item-price").textContent = money.format(item.price);
   const button = card.querySelector(".add-item");
   button.dataset.add = item.id;
-  button.setAttribute("aria-label", `Agregar ${item.name} a mi selección`);
+  button.setAttribute("aria-label", `Agregar ${escapeHtml(item.name)} a mi selección`);
   button.textContent = "+";
 }
 
@@ -171,7 +57,7 @@ function renderMenu(category = "todos") {
     const bubbleMarkup = lightweightMobileMenu ? "" : "<span></span>".repeat(14);
     menuGrid.innerHTML = menuItems
       .map((item) => `
-      <article class="menu-item" data-item-id="${item.id}">
+      <article class="menu-item" data-item-id="${escapeHtml(item.id)}">
         <div class="beer" aria-hidden="true">
           <div class="beer-bubbles">${bubbleMarkup}</div>
         </div>
@@ -180,17 +66,17 @@ function renderMenu(category = "todos") {
         <canvas class="frost" aria-hidden="true"></canvas>
         <div class="drops" aria-hidden="true"></div>
         <div class="beer-menu-content">
-          <span class="menu-item-category">${item.categoryLabel}</span>
-          <h3>${item.name}</h3>
+          <span class="menu-item-category">${escapeHtml(item.categoryLabel)}</span>
+          <h3>${escapeHtml(item.name)}</h3>
           <div class="menu-item-media${item.photo === placeholderPhoto ? " is-placeholder" : ""}">
             <img class="menu-item-photo${item.photo === placeholderPhoto ? " is-placeholder" : ""}"
-              src="${item.photo}" alt="${item.photo === placeholderPhoto ? `Imagen pendiente para ${item.name}` : `Foto de ${item.name}`}"
+              src="${escapeHtml(item.photo)}" alt="${item.photo === placeholderPhoto ? `Imagen pendiente para ${escapeHtml(item.name)}` : `Foto de ${escapeHtml(item.name)}`}"
               loading="lazy" decoding="async" />
           </div>
-          <p class="menu-item-description"${item.description ? "" : " hidden"}>${item.description}</p>
+          <p class="menu-item-description"${item.description ? "" : " hidden"}>${escapeHtml(item.description)}</p>
           <div class="menu-item-footer">
             <span class="menu-item-price">${money.format(item.price)}</span>
-            <button class="add-item" type="button" data-add="${item.id}" aria-label="Agregar ${item.name} a mi selección">+</button>
+            <button class="add-item" type="button" data-add="${escapeHtml(item.id)}" aria-label="Agregar ${escapeHtml(item.name)} a mi selección">+</button>
           </div>
         </div>
         <img class="beer-foam" src="assets/beer-foam.svg" alt="" aria-hidden="true" width="260" height="122" loading="lazy" />
@@ -281,12 +167,12 @@ function renderOrder() {
   orderList.innerHTML = rows
     .map(({ item, quantity }) => `
       <div class="order-row">
-        <strong>${item.name}</strong>
+        <strong>${escapeHtml(item.name)}</strong>
         <p>${money.format(item.price * quantity)}</p>
-        <div class="quantity-controls" aria-label="Cantidad de ${item.name}">
-          <button type="button" data-change="${item.id}" data-delta="-1" aria-label="Quitar uno">−</button>
+        <div class="quantity-controls" aria-label="Cantidad de ${escapeHtml(item.name)}">
+          <button type="button" data-change="${escapeHtml(item.id)}" data-delta="-1" aria-label="Quitar uno">−</button>
           <span>${quantity}</span>
-          <button type="button" data-change="${item.id}" data-delta="1" aria-label="Agregar uno">+</button>
+          <button type="button" data-change="${escapeHtml(item.id)}" data-delta="1" aria-label="Agregar uno">+</button>
         </div>
       </div>
     `)
@@ -339,7 +225,7 @@ copyOrderButton.addEventListener("click", async () => {
   const total = rows.reduce((sum, { item, quantity }) => sum + item.price * quantity, 0);
   const text = [
     "Mi selección — Bar El Manudito",
-    ...rows.map(({ item, quantity }) => `${quantity} × ${item.name} — ${money.format(item.price * quantity)}`),
+    ...rows.map(({ item, quantity }) => `${quantity} × ${escapeHtml(item.name)} — ${money.format(item.price * quantity)}`),
     `Total estimado: ${money.format(total)}`,
   ].join("\n");
 

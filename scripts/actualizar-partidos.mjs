@@ -131,7 +131,8 @@ function isMorera(venue = "") {
 const start = costaRicaParts(new Date()).date;
 const queryStart = addDays(start, -DAYS_BACK);
 const end = addDays(start, DAYS_AHEAD);
-const payloadEvents = await fetchEvents(queryStart, end);
+const offline = process.argv.includes("--sin-consultar-partidos");
+const payloadEvents = offline ? [] : await fetchEvents(queryStart, end);
 const eventsById = new Map();
 
 for (const event of payloadEvents) {
@@ -142,7 +143,7 @@ for (const event of payloadEvents) {
   eventsById.set(String(event.id || `${event.date}|${event.name}`), event);
 }
 
-const automaticRows = [...eventsById.values()].flatMap((event) => {
+let automaticRows = [...eventsById.values()].flatMap((event) => {
   if (event.status?.type?.completed) return [];
   const competition = event.competitions?.[0];
   const competitors = competition?.competitors || [];
@@ -218,9 +219,22 @@ if (!currentHeadings || required.some((heading) => !currentHeadings.includes(hea
   throw new Error(`El encabezado debe incluir: ${required.join(", ")}`);
 }
 const indexes = Object.fromEntries(headings.map((heading) => [heading, currentHeadings.indexOf(heading)]));
-const manualRows = records
-  .filter((record) => (record[indexes.tipo] || "").toLowerCase() !== "partido")
-  .map((record) => Object.fromEntries(headings.map((heading) => [heading, indexes[heading] >= 0 ? record[indexes[heading]] || "" : ""])));
+// Los eventos manuales tienen una ?nica fuente; borrar en Decap los elimina.
+const { eventos: manualRows } = JSON.parse(await readFile(new URL("../data/eventos.json", import.meta.url), "utf8"));
+for (const row of manualRows) {
+  if (!["evento", "cerrado"].includes(row.tipo) || !row.nombre?.trim()
+      || !/^\d{4}-\d{2}-\d{2}$/.test(row.fecha)
+      || Number.isNaN(Date.parse(`${row.fecha}T12:00:00Z`))
+      || new Date(`${row.fecha}T12:00:00Z`).toISOString().slice(0, 10) !== row.fecha
+      || (row.hora && !/^([01]\d|2[0-3]):[0-5]\d$/.test(row.hora))) {
+    throw new Error("Evento manual inv?lido: revis? nombre, tipo, fecha y hora en el panel.");
+  }
+}
+// En publicaciones de contenido no dependemos de ESPN; conservamos los partidos.
+if (offline || !payloadEvents.length) {
+  automaticRows = records.filter((record) => record[indexes.tipo] === "partido")
+    .map((record) => Object.fromEntries(headings.map((heading) => [heading, record[indexes[heading]] || ""])));
+}
 
 let calendarConfig = { cerrar_lunes: true, imagen_cerrado: "assets/cerrado.svg" };
 try {
@@ -230,7 +244,7 @@ try {
 }
 
 // Un lunes solo deja de marcarse como cerrado cuando existe una actividad
-// escrita manualmente en eventos.xlsx. Un partido automático no abre el bar.
+// publicada en el panel de eventos. Un partido automático no abre el bar.
 const occupiedDates = new Set(manualRows.map((row) => row.fecha));
 const mondayRows = [];
 if (calendarConfig.cerrar_lunes) {
@@ -260,7 +274,7 @@ if (calendarConfig.cerrar_lunes) {
 }
 
 const rows = [...manualRows, ...mondayRows, ...automaticRows].sort((a, b) =>
-  a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora) || a.nombre.localeCompare(b.nombre, "es")
+  a.fecha.localeCompare(b.fecha) || (a.hora || "").localeCompare(b.hora || "") || a.nombre.localeCompare(b.nombre, "es")
 );
 const output = [headings, ...rows.map((row) => headings.map((heading) => row[heading]))]
   .map((row) => row.map(csvCell).join(","))
@@ -270,7 +284,7 @@ await writeFile(CSV_PATH, output, "utf8");
 const resultsOutput = [resultHeadings, ...resultRows.map((row) => resultHeadings.map((heading) => row[heading]))]
   .map((row) => row.map(csvCell).join(","))
   .join("\n") + "\n";
-await writeFile(RESULTS_PATH, resultsOutput, "utf8");
+if (!offline && payloadEvents.length) await writeFile(RESULTS_PATH, resultsOutput, "utf8");
 
 console.log(
   `Calendario actualizado: ${automaticRows.length} partido(s) futuros, `
