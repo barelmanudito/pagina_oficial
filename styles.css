@@ -2835,19 +2835,20 @@ a.social-link:focus-visible {
 body.moment-viewer-open { overflow: hidden; }
 @media (max-width: 560px) { .moments-grid figure { flex-basis: 88%; } }
 /* Ofertas: la sección desaparece automáticamente cuando no hay descuentos. */
-.discounts-section { background: radial-gradient(ellipse at top left, #70101855, transparent 65%), #101012; }
+.discounts-section { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+.discounts-section h2 { margin: 0 0 1rem; font-size: clamp(1.25rem, 2.5vw, 1.65rem); }
 .discounts-section[hidden] { display: none; }
-.discounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 1.5rem; }
-.discount-card { overflow: hidden; border: 1px solid #f20b1855; border-radius: 1.25rem; background: #19191c; display: flex; flex-direction: column; }
-.discount-photo { position: relative; background: #0a0a0b; }
-.discount-photo img { width: 100%; height: 220px; object-fit: contain; display: block; }
-.discount-badge { position: absolute; top: 1rem; right: 1rem; padding: .45rem .85rem; border-radius: 2rem; background: var(--red); color: white; font-size: 1.3rem; font-weight: 900; }
-.discount-copy { padding: 1.5rem; display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
-.discount-copy h3 { font-size: 1.5rem; margin: .25rem 0 1rem; }
-.discount-prices { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; }
+.discounts-grid { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; overscroll-behavior-x: contain; padding: 3px 0 10px; scrollbar-color: #6f7177 transparent; }
+.discounts-grid:focus-visible { outline: 2px solid #ffcc77; outline-offset: 4px; }
+.discount-card { flex: 0 0 164px; overflow: hidden; border: 1px solid var(--line); border-radius: .85rem; background: #151517; scroll-snap-align: start; }
+.discount-photo { position: relative; padding: 8px; }
+.discount-photo img { width: 100%; height: 140px; object-fit: contain; display: block; }
+.discount-badge { position: absolute; top: 8px; right: 8px; padding: .2rem .5rem; border-radius: 1rem; background: #bc1220; color: white; font-size: .75rem; font-weight: 800; }
+.discount-price { display: block; padding: .45rem .75rem .7rem; color: var(--white); font-size: 1.05rem; text-align: center; }
 .price-before { display: block; color: #c6c6cc; font-size: .8rem; font-weight: 500; }
 .price-now { display: block; color: #fff; }
-.discount-prices .price-now { font-size: 1.8rem; font-weight: 900; }
-.discount-saving { color: #ffcc75; font-weight: 700; }
-.discount-copy .button { margin-top: auto; }
 .menu-item-price:has(.price-now) { border-color: var(--red); }
+@media (max-width: 560px) {
+  .discount-card { flex-basis: 140px; }
+  .discount-photo img { height: 116px; }
+}

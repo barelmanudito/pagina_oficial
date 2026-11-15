@@ -36,12 +36,7 @@ function renderDiscounts() {
     return `<article class="discount-card">
       <div class="discount-photo"><img src="${escapeHtml(item.photo)}" alt="${escapeHtml(item.name)}" loading="lazy" decoding="async" />
       <span class="discount-badge">${percent > 0 ? `−${percent}%` : 'Oferta'}</span></div>
-      <div class="discount-copy"><p class="eyebrow">${escapeHtml(item.categoryLabel)}</p>
-      <h3>${escapeHtml(item.name)}</h3>
-      ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
-      <div class="discount-prices">${priceMarkup(item)}</div>
-      <p class="discount-saving">Ahorrás ${money.format(saving)} por unidad</p>
-      <button class="button button-primary" type="button" data-add="${escapeHtml(item.id)}" aria-label="Agregar ${escapeHtml(item.name)} en oferta a mi selección">Lo quiero +</button></div>
+      <strong class="discount-price" aria-label="Precio de oferta">${money.format(item.discountPrice)}</strong>
     </article>`;
   }).join("");
   section.querySelectorAll("img").forEach((photo) => photo.addEventListener("error", () => {
@@ -160,11 +155,9 @@ function addProduct(event) {
   order.set(id, (order.get(id) || 0) + 1);
   updateOrderSummary();
   button.textContent = "✓";
-  const label = button.closest("#ofertas") ? "Lo quiero +" : "+";
-  window.setTimeout(() => { button.textContent = label; }, 650);
+  window.setTimeout(() => { button.textContent = "+"; }, 650);
 }
 menuGrid.addEventListener("click", addProduct);
-document.querySelector("#discounts-grid")?.addEventListener("click", addProduct);
 
 const orderDialog = document.querySelector("#order-dialog");
 const orderList = document.querySelector("#order-list");

@@ -102,8 +102,9 @@ Verificar que una cuenta sin permisos no pueda publicar.
 El precio normal (`price`) se conserva. El campo opcional `discountPrice` define
 el precio de oferta: debe ser mayor que cero y menor que el normal. Borrarlo
 quita la oferta. Los productos no disponibles no aparecen en las promociones.
-La portada destaca las ofertas debajo de Eventos con foto, Antes/Ahora, porcentaje
-y ahorro por unidad. La carta QR y la selección también usan el precio de oferta.
+La portada muestra las ofertas antes del menú en una fila compacta, con foto,
+porcentaje y precio de oferta. La carta conserva los precios Antes/Ahora;
+la carta QR y la selección también usan el precio de oferta.
 No se han activado descuentos reales: se eligen desde la app o el administrador.
 
 ## Galería de Momentos
