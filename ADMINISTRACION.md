@@ -28,6 +28,13 @@ no se presupone una suscripción ni se contrata ningún servicio con estos archi
 
 ## Uso diario desde Windows
 
+Las aplicaciones de Windows y Android incluyen **Momentos** para administrar
+`data/galeria.json` y las fotos en `assets/momentos/`. Se publican únicamente en la
+galería web; no se envían a Facebook ni Instagram. La sección **Redes sociales**
+es independiente y solo acepta eventos, con confirmación y permisos Meta configurados.
+Los módulos están preparados; el envío real a redes requiere conectar las cuentas
+del bar siguiendo `META-Y-ANDROID.md` de la carpeta de la aplicación.
+
 Abrir el panel en Edge o Chrome e iniciar sesión con GitHub.
 
 - **Productos y categorías:** abrir un grupo y agregar o editar sus productos.

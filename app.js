@@ -250,6 +250,36 @@ function dateKey(year, month, day) {
 }
 
 const calendarTitle = document.querySelector("#calendar-title");
+async function loadMoments() {
+  const grid = document.querySelector("#moments-grid");
+  if (!grid) return;
+  try {
+    const response = await fetch("data/galeria.json", { cache: "no-store" });
+    if (!response.ok) return;
+    const data = await response.json();
+    for (const moment of data.momentos || []) {
+      if (moment.visible === false || !moment.imagen?.startsWith("assets/") || moment.imagen.includes("..")) continue;
+      const figure = document.createElement("figure");
+      const link = document.createElement("a");
+      link.href = moment.imagen;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      const image = document.createElement("img");
+      image.src = moment.imagen;
+      image.alt = moment.descripcion || moment.titulo || "Momento en El Manudito";
+      image.loading = "lazy";
+      image.decoding = "async";
+      link.append(image);
+      const caption = document.createElement("figcaption");
+      caption.textContent = moment.titulo || "";
+      figure.append(link, caption);
+      grid.append(figure);
+    }
+    grid.hidden = !grid.childElementCount;
+    document.querySelector("#moments-empty").hidden = !!grid.childElementCount;
+  } catch (error) { console.warn("No se pudo cargar la galería."); }
+}
+loadMoments();
 const calendarGrid = document.querySelector("#calendar-grid");
 const eventTag = document.querySelector("#event-tag");
 const eventDetail = document.querySelector("#event-detail");

@@ -209,6 +209,50 @@
               "required": false
             }
           ]
+        },
+        {
+          "name": "galeria",
+          "label": "Momentos (solo web)",
+          "file": "data/galeria.json",
+          "fields": [
+            {
+              "name": "momentos",
+              "label": "Fotos de momentos",
+              "widget": "list",
+              "summary": "{{fields.titulo}}",
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "Identificador",
+                  "widget": "string"
+                },
+                {
+                  "name": "titulo",
+                  "label": "Titulo",
+                  "widget": "string"
+                },
+                {
+                  "name": "descripcion",
+                  "label": "Descripcion",
+                  "widget": "text",
+                  "required": false
+                },
+                {
+                  "name": "imagen",
+                  "label": "Foto",
+                  "widget": "image",
+                  "media_folder": "/assets/momentos",
+                  "public_folder": "assets/momentos"
+                },
+                {
+                  "name": "visible",
+                  "label": "Visible en la web",
+                  "widget": "boolean",
+                  "default": true
+                }
+              ]
+            }
+          ]
         }
       ]
     }
