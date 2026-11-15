@@ -30,6 +30,7 @@ fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_loca
 2026-11-09,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg,,,
 2026-11-13,Ecuador vs Costa Rica,partido,18:00,Selección de Costa Rica,Estadio Olímpico Atahualpa,401930898,209,Ecuador,https://a.espncdn.com/i/teamlogos/countries/500/ecu.png,214,Costa Rica,https://a.espncdn.com/i/teamlogos/countries/500/crc.png,no,,Finalizado,2,0
 2026-11-16,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg,,,
+2026-11-17,test,evento,,test,,,,,,,,,,assets/eventos/foto-7aa97dae2dc10abd.jpg,,,
 2026-11-17,Argentina vs Costa Rica,partido,17:00,Selección de Costa Rica,Mario Alberto Kempes,401930895,202,Argentina,https://a.espncdn.com/i/teamlogos/countries/500/arg.png,214,Costa Rica,https://a.espncdn.com/i/teamlogos/countries/500/crc.png,no,,Programado,,
 2026-11-20,Escorpiones Belén vs AD San Carlos,partido,20:00,Primera División de Costa Rica,Estadio Rafael Bolaños,401876818,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,no,,Programado,,
 2026-11-21,Puntarenas FC vs Herediano,partido,17:30,Primera División de Costa Rica,Estadio Lito Pérez,401876816,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,no,,Programado,,
