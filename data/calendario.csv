@@ -1,9 +1,4 @@
 fecha,nombre,tipo,hora,descripcion,estadio,id_partido,id_local,local,escudo_local,id_visitante,visitante,escudo_visitante,en_morera,imagen
-2026-10-12,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-19,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-10-26,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-11-02,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
-2026-11-09,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-11-16,Cerrado,cerrado,,El bar permanece cerrado los lunes.,,,,,,,,,no,assets/cerrado.svg
 2026-11-20,Escorpiones Belén vs AD San Carlos,partido,20:00,Primera División de Costa Rica,Estadio Rafael Bolaños,401876818,132447,Escorpiones Belén,https://a.espncdn.com/i/teamlogos/soccer/500/132447.png,859,AD San Carlos,https://a.espncdn.com/i/teamlogos/soccer/500/859.png,no,
 2026-11-21,Puntarenas FC vs Herediano,partido,17:30,Primera División de Costa Rica,Estadio Lito Pérez,401876816,7237,Puntarenas FC,https://a.espncdn.com/i/teamlogos/soccer/500/7237.png,862,Herediano,https://a.espncdn.com/i/teamlogos/soccer/500/862.png,no,
