@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 const CSV_PATH = new URL("../data/calendario.csv", import.meta.url);
 const RESULTS_PATH = new URL("../data/resultados.csv", import.meta.url);
 const CONFIG_PATH = new URL("../data/configuracion-calendario.json", import.meta.url);
+const EVENTS_PATH = new URL("../data/eventos.json", import.meta.url);
 const TIME_ZONE = "America/Costa_Rica";
 const API_BASE = process.env.PARTIDOS_URL
   || "https://site.api.espn.com/apis/site/v2/sports/soccer/crc.1/scoreboard";
@@ -255,7 +256,8 @@ if (!currentHeadings || required.some((heading) => !currentHeadings.includes(hea
 }
 const indexes = Object.fromEntries(headings.map((heading) => [heading, currentHeadings.indexOf(heading)]));
 // Los eventos manuales tienen una única fuente; borrar en el editor los elimina.
-const { eventos: manualRows } = JSON.parse(await readFile(new URL("../data/eventos.json", import.meta.url), "utf8"));
+const manualDocument = JSON.parse(await readFile(EVENTS_PATH, "utf8"));
+let manualRows = manualDocument.eventos;
 for (const row of manualRows) {
   if (!["evento", "cerrado"].includes(row.tipo) || !row.nombre?.trim()
       || !/^\d{4}-\d{2}-\d{2}$/.test(row.fecha)
@@ -264,6 +266,22 @@ for (const row of manualRows) {
       || (row.hora && !/^([01]\d|2[0-3]):[0-5]\d$/.test(row.hora))) {
     throw new Error("Evento manual inválido: revisá nombre, tipo, fecha y hora en el panel.");
   }
+}
+// Caduca al cumplirse un mes calendario, ajustando el día al fin del mes destino.
+// Por ejemplo, el 31 de enero vence el 28/29 de febrero.
+function eventExpiration(dateText) {
+  const [year, month, day] = dateText.split("-").map(Number);
+  const next = new Date(Date.UTC(year, month, 1, 12));
+  const lastDay = new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth() + 1, 0, 12)).getUTCDate();
+  next.setUTCDate(Math.min(day, lastDay));
+  return next.toISOString().slice(0, 10);
+}
+const retainedEvents = manualRows.filter((row) => row.tipo !== "evento" || eventExpiration(row.fecha) > start);
+if (retainedEvents.length !== manualRows.length) {
+  console.log(`Eliminados ${manualRows.length - retainedEvents.length} eventos que cumplieron un mes.`);
+  manualDocument.eventos = retainedEvents;
+  await writeFile(EVENTS_PATH, JSON.stringify(manualDocument, null, 2) + "\n", "utf8");
+  manualRows = retainedEvents;
 }
 // En publicaciones de contenido no dependemos de ESPN; conservamos los partidos.
 const savedMatches = records.filter((record) => record[indexes.tipo] === "partido")

@@ -63,6 +63,26 @@ try {
   const results = await readFile(join(root, "data/resultados.csv"), "utf8");
   assert.ok(results.includes(",played,") && results.includes(",seleccion,"));
   assert.ok(output.includes("Finalizado,2,1"));
+  // Caducidad independiente del día del mes y respetando los meses cortos.
+  const expirationCases = [
+    ["2026-11-15", "2026-10-15", true],
+    ["2026-11-14", "2026-10-15", false],
+    ["2026-11-30", "2026-10-31", true],
+    ["2027-02-28", "2027-01-31", true],
+    ["2028-02-28", "2028-01-31", false],
+    ["2028-02-29", "2028-01-31", true],
+    ["2027-01-15", "2026-12-15", true],
+  ];
+  for (const [now, eventDate, expired] of expirationCases) {
+    const event = { nombre: "Actividad con vencimiento", fecha: eventDate, tipo: "evento" };
+    const closure = { nombre: "Cierre histórico", fecha: "2020-01-01", tipo: "cerrado" };
+    await writeFile(eventFile, JSON.stringify({ eventos: [event, closure], otra_configuracion: true }));
+    await execute(process.execPath, [script, "--sin-consultar-partidos"], { env: { ...process.env, CALENDARIO_AHORA: `${now}T18:00:00Z` } });
+    const persisted = JSON.parse(await readFile(eventFile, "utf8"));
+    assert.equal(persisted.eventos.some((e) => e.tipo === "evento"), !expired, `${eventDate} en ${now}`);
+    assert.ok(persisted.eventos.some((e) => e.tipo === "cerrado"));
+    assert.equal(persisted.otra_configuracion, true);
+  }
   console.log("Calendario: convivencia, imágenes, eliminación, resultados y validación correctos.");
 } finally {
   if (server) await new Promise((resolve) => server.close(resolve));

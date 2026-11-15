@@ -56,6 +56,13 @@ archivos de una página pública son visibles para los visitantes.
 
 ## Cómo funciona
 
+Los eventos manuales se eliminan automáticamente de `data/eventos.json` al cumplir
+un mes calendario desde su fecha, durante la actualización diaria de GitHub Actions
+o una nueva publicación. Si el mes siguiente es más corto, vence el último día
+de ese mes (31 de enero → 28/29 de febrero). La limpieza utiliza la fecha de Costa Rica.
+La aplicación recibe la lista actualizada al sincronizar; los cierres manuales,
+los partidos automáticos y la galería de Momentos conservan sus reglas propias.
+
 La aplicación de Windows mantiene una copia local del repositorio por HTTPS y
 comprueba actualizaciones al abrir. Las vistas previas usan esas fotos y conservan
 los borradores pendientes. No necesita Git instalado.
