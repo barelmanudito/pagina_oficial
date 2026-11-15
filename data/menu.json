@@ -422,8 +422,7 @@
           "price": 1500,
           "description": "Original, Silver, Light, Ultra o Cero · 350 ml",
           "photo": "assets/productos/Imperial.webp",
-          "available": true,
-          "discountPrice": 1200
+          "available": true
         },
         {
           "id": "pilsen",
