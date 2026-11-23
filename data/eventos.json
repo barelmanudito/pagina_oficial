@@ -1,3 +1,12 @@
 {
-  "eventos": []
+  "eventos": [
+    {
+      "nombre": "Día de partido especial",
+      "fecha": "2026-11-23",
+      "hora": "",
+      "descripcion": "Partido de la Liga y Cartagines",
+      "imagen": "assets/eventos/foto-7a7b8c7933f042e3.jpg",
+      "tipo": "evento"
+    }
+  ]
 }
