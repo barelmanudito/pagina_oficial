@@ -11,11 +11,6 @@ on:
 
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 concurrency:
   group: github-pages
   cancel-in-progress: false
@@ -23,10 +18,9 @@ concurrency:
 jobs:
   actualizar-y-publicar:
     runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: write
+      pages: read
 
     steps:
       - name: Descargar archivos del repositorio
@@ -73,10 +67,30 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Preparar archivos de la página
+        id: subir-pagina
         uses: actions/upload-pages-artifact@v4
         with:
           path: "."
 
+      - name: Confirmar la subida del paquete de la página
+        env:
+          ARTIFACT_ID: ${{ steps.subir-pagina.outputs.artifact_id }}
+        run: |
+          if [[ -z "$ARTIFACT_ID" ]]; then
+            echo "::error::La subida del paquete github-pages no devolvió un identificador."
+            exit 1
+          fi
+
+  publicar:
+    needs: actualizar-y-publicar
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Publicar en GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
